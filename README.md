@@ -2,8 +2,6 @@
 
 A simple **Pet Appointment System** built using **ASP.NET (C#)**. This system allows members to book pet appointments while administrators manage users, appointments, and system operations.
 
-This README is kept **simple and clean** so it's easy for lecturers, testers, and teammates to follow.
-
 ---
 
 ## 🚀 Features
@@ -39,23 +37,7 @@ If not:
 Tools → NuGet Package Manager → Restore
 ```
 
-### **4. Set Database Connection**
-
-Check your connection string in:
-
-```
-appsettings.json
-```
-
-Ensure it matches your SQL Server settings.
-
-### **5. Import Database**
-
-1. Open **SQL Server Management Studio (SSMS)**
-2. Create a new database (example: `PetAppointmentDB`)
-3. Import the `.sql` found in the `/database/` folder
-
-### **6. Run the System**
+### **4. Run the System**
 
 Press **F5** or click **Run** in Visual Studio.
 
