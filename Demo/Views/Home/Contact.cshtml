@@ -1,0 +1,20 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="contact-section">
+    <h1 class="section-title">@Localizer["Contact Us"]</h1>
+    <div class="contact-card">
+        <p>
+            <b>@Localizer["Email"]:</b> admin@pawfectgrooming.com<br />
+            <b>@Localizer["Phone Number"]:</b> (60) 111-222 5686<br />
+            <b>@Localizer["Address"]:</b> 102-A,B,C, Jalan Jejaka, Maluri, 55100 Cheras, Wilayah Persekutuan Kuala Lumpur
+        </p>
+        <p>
+            @Localizer["We look forward to pampering your pets!"]
+        </p>
+    </div>
+</section>

@@ -1,0 +1,36 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = "Package Maintenance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="admin-section">
+    <h1 class="section-title">@Localizer["Package Maintenance"]</h1>
+    <form data-ajax="true"
+          data-ajax-update="#target"
+          data-ajax-loading="#loader"
+          id="f">
+        @Html.TextBox("name", "",
+        new { type = "search", autofocus = "", data_trim = "" })
+        <button>@Localizer["Search"]</button>
+        <img src="/images/loader.gif" id="loader" style="display: none">
+    </form>
+    <a class="btn" href="/Admin/Insert2">@Localizer["Insert"]</a>
+
+</section>
+
+<div id="target">
+    <partial name="_PackageList">
+</div>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#name').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+    </script>
+}

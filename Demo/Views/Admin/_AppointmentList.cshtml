@@ -1,0 +1,268 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<PawfectGrooming.Models.Booking>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    string[] fields = ["Email", "Date", "Time", "Pet", "Service", "Package", "Price", "Status"];
+    string[] labels = [Localizer["Email"], Localizer["Date"], Localizer["Time"], Localizer["Pet"], Localizer["Service"], Localizer["Package"], Localizer["Price"], Localizer["Status"]];
+
+    string ResolveImage(string img)
+    {
+        if (string.IsNullOrWhiteSpace(img)) return Url.Content("~/images/noimage.png");
+        if (img.StartsWith("http", StringComparison.OrdinalIgnoreCase) || img.StartsWith("/")) return img;
+        return Url.Content($"~/images/Package_Images/{img}");
+    }
+
+    // replace existing helpers with these robust, case-insensitive mappings
+    string GetStatusClass(string status)
+    {
+        if (string.IsNullOrWhiteSpace(status)) return "status-pending";
+        var s = status.Trim().ToLowerInvariant();
+        return s switch
+        {
+            "pendingpayment" => "status-pending",
+            "pending" => "status-pending",
+            "paid" => "status-pending", // if you prefer 'paid' to look like completed, change to status-completed
+            "completed" => "status-completed",
+            "deposit" => "status-completed", // Deposit payments are also considered completed
+            "failed" => "status-cancelled",
+            "cancelled" => "status-cancelled",
+            _ => "status-pending"
+        };
+    }
+
+    string GetStatusDisplayName(string status)
+    {
+        if (string.IsNullOrWhiteSpace(status)) return "Pending Payment";
+        var s = status.Trim().ToLowerInvariant();
+        return s switch
+        {
+            "pendingpayment" => "Pending Payment",
+            "pending" => "Pending Payment",
+            "paid" => "Pending Payment", // or "Paid" if you want that wording
+            "completed" => "Completed",
+            "deposit" => "Deposit",
+            "failed" => "Failed",
+            "cancelled" => "Cancelled",
+            _ => "Pending Payment"
+        };
+    }
+}
+
+
+ <style>
+    /* Make table adapt to content but keep specific columns constrained so action buttons remain visible */
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+    }
+
+    .admin-table th {
+        padding: .5rem .75rem;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .admin-table td {
+        padding: .5rem .75rem;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .col-name {
+        width: 35%;
+        white-space: normal;
+        word-break: break-word;
+    }
+    /* .col-desc { width:30%; max-width:40ch; white-space:normal; word-break:break-word; }
+        .col-features { width:22%; max-width:40ch; white-space:normal; word-break:break-word; } */
+    .col-price {
+        width: 20%;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .col-pet {
+        width: 20%;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .col-img {
+        width: 80px;
+        text-align: center;
+    }
+
+    .col-actions {
+        width: 120px;
+        white-space: nowrap;
+        text-align: right;
+    }
+
+    .admin-table img {
+        max-width: 50px;
+        max-height: 50px;
+        object-fit: cover;
+        display: inline-block;
+        border-radius: 4px;
+    }
+
+    /* Small button spacing */
+    .admin-table .btn {
+        margin-left: .35rem;
+        margin-right: .35rem;
+        padding: .35rem .6rem;
+        font-size: .9rem;
+    }
+
+
+    .status-badge {
+        /* Remove global absolute positioning impact: keep badges inline in admin table */
+        position: static;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: nowrap;
+        display: inline-block;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-table td:has(.status-badge) {
+        text-align: center;
+    }
+    /* Responsive: let table scroll horizontally on very small screens */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    /* Page-scoped tweaks so the right-side Actions (Delete) are visible */
+    /* Allow horizontal scrolling on small viewports */
+    .admin-section .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Let this table auto-size columns so the actions column can expand to fit buttons */
+    .admin-section .table {
+        table-layout: auto; /* overrides global fixed layout from site.css for this table only */
+    }
+
+    /* Ensure the actions column has enough space and doesn't wrap */
+    .admin-section th.actions,
+    .admin-section td.actions {
+        white-space: nowrap;
+        min-width: 140px; /* adjust width as needed */
+    }
+</style>
+
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+
+<p>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of @Model.PageCount
+</p>
+
+<div class="table-wrapper">
+    <table class="table admin-table">
+        <thead>
+            <tr>
+                <!-- Dynamically create headers with sorting links -->
+                @for (int i = 0; i < fields.Length; i++)
+                {
+                    var field = fields[i];
+                    var label = labels[i];
+                    string arrow = ViewBag.Sort == field ? (ViewBag.Dir == "asc" ? "▲" : "▼") : "";
+
+                    // build url preserving current filters (email/status) and reset to page 1
+                    var url = Url.Action("AppointmentMaintenance", new { email = ViewBag.Email, status = ViewBag.Status, sort = field, dir = ViewBag.Dir == "asc" ? "des" : "asc", page = 1 });
+
+                    <th data-sort="@field" class="sortable-header">
+      <a href="@url" style="color:inherit;text-decoration:none;">@label @arrow</a>
+  </th>
+                }
+                <th class="col-img">@Localizer["Image"]</th>
+                <th class="col-actions">@Localizer["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var appt in Model)
+            {
+                <tr>
+                    <td>@appt.UserEmail</td>
+                    <td>@appt.Date.ToString("yyyy-MM-dd")</td>
+                    <td>@appt.Time</td>
+                    <td>@appt.Pet?.Name</td>
+                    <td>@appt.Service?.Name</td>
+                    <td>@appt.Package?.Name</td>
+                    <td>@appt.Price</td>
+                    <td>
+                        @{
+                            var status = appt.Status ?? "";
+                            var displayStatus = GetStatusDisplayName(status);
+                            var statusClass = GetStatusClass(status);
+                        }
+                        <span class="status-badge @statusClass">@Localizer[displayStatus]</span>
+                    </td>
+                    <td class="col-img">
+                        @{
+                            var imageFromService = appt.Service?.ImageURL?.FirstOrDefault(); // get image from service if available
+                            var imageFromPackage = appt.Package?.ImageURL?.FirstOrDefault(); // get image from package if available
+                            var finalImage = !string.IsNullOrWhiteSpace(imageFromService) ? imageFromService : imageFromPackage;
+                        }
+                        <img src="@ResolveImage(finalImage)" alt="Appointment Image" />
+                    </td>
+                    <td class="col-actions">
+                        @if (appt.Service != null) // only show if service exists
+                        {
+                            // Link to Service details if it's a service appointment
+                            <button type="button" class="btn btn-sm btn-info" onclick="window.location.href='/Admin/Detail/@appt.Service.Id'">
+                                @Localizer["Details"]
+                            </button>
+                        }
+                        else if (appt.Package != null) // only show if package exists
+                        {
+                            // Link to Package details if it's a package appointment
+                            <button type="button" class="btn btn-sm btn-info" onclick="window.location.href='/Admin/Detail2/@appt.Package.Id'">
+                                @Localizer["Details"]
+                            </button>
+                        }
+                        <button type="button" class="btn btn-sm btn-warning" data-get="/Admin/UpdateAppointment/@appt.Id">
+                            @Localizer["Update"]
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" data-post="/Admin/DeleteAppointment/@appt.Id">
+                            @Localizer["Delete"]
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = Localizer["First"];
+    options.LinkToLastPageFormat = Localizer["Last"];
+    options.LinkToPreviousPageFormat = Localizer["Previous"];
+    options.LinkToNextPageFormat = Localizer["Next"];
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+Model,
+p => $"?email={ViewBag.Email}&status={ViewBag.Status}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

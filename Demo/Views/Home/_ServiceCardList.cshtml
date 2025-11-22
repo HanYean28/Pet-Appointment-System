@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PawfectGrooming.Models.ServiceOption>
+@using System.Text.Json
+@inject Microsoft.Extensions.Localization.IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+
+@{
+    string ResolveImage(string img)
+    {
+        if (string.IsNullOrWhiteSpace(img)) return Url.Content("~/images/noimage.png");
+        if (img.StartsWith("http", StringComparison.OrdinalIgnoreCase) || img.StartsWith("/")) return img;
+        return Url.Content($"~/images/Service_Images/{img}");
+    }
+}
+
+@foreach (var s in Model ?? Enumerable.Empty<PawfectGrooming.Models.ServiceOption>())
+{
+    var images = (s.ImageURL ?? new List<string>()).Select(i => ResolveImage(i)).ToList();
+    var imagesJson = JsonSerializer.Serialize(images);
+    <div class="service-card" data-images='@Html.Raw(imagesJson)'>
+        <span class="price-tag">@Localizer["From"] RM @s.Price</span>
+        <div style="position:relative;">
+            <button type="button" class="card-arrow left" aria-label="Prev">◀</button>
+            <img class="card-main-img standard-image" src="@(images.FirstOrDefault() ?? Url.Content("~/images/noimage.png"))" alt="@s.Name" />
+            <button type="button" class="card-arrow right" aria-label="Next">▶</button>
+        </div>
+        <div class="p-6">
+            <h3 style="font-size:1.21rem;font-weight:700;color:#23272f;">@Localizer[@s.Name]</h3>
+            <p style="font-size:1rem;color:#23272f;margin-bottom:1rem;">@Localizer[@s.Description]</p>
+            @{
+                var descItems = (s.Features != null && s.Features.Any())
+                    ? s.Features.AsEnumerable()
+                    : (!string.IsNullOrWhiteSpace(s.Description)
+                        ? s.Description.Split(new[] { "\r\n", "\n", ";" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim())
+                        : Enumerable.Empty<string>());
+            }
+            @if (descItems.Any())
+            {
+                <ul class="service-card-features">
+                    @foreach (var item in descItems)
+                    {
+                        <li>• @Localizer[@item]</li>
+                    }   
+                </ul>
+            }
+            @* For Service *@
+            <a href="@Url.Action("Book", "Home", new { step = 1, serviceId = s.Id })" class="btn book-btn">@Localizer["Book This Service"]</a>
+        </div>
+    </div>
+}

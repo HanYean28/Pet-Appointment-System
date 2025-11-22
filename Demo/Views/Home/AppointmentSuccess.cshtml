@@ -1,0 +1,22 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = "Appointment Booked";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="appointment-booked-section">
+    <div class="appointment-booked-card">
+            <svg width="64" height="64" fill="none" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="32" fill="#D1FADF" />
+                <path d="M45 27L30 42L19 31" stroke="#22C55E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+
+    <h1>@Localizer["Appointment Confirmed!"]</h1>
+    <p>@Localizer["Your pet grooming appointment has been successfully scheduled."]</p>
+
+        <a href="/Home/AppointmentsList" class="btn btn-next"">View My Appointments</a>
+        <br />
+        <a href="/" class="btn btn-prev" style="font-size:1.08rem; padding:12px 32px;">Back to Home</a>
+    </div>
+</section>

@@ -1,0 +1,8 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = "Account | Access Denied";
+}
+<h3>@Localizer["Access Denied"]</h3>
+<p>@Localizer["You are NOT AUTHORIZED to access the page"].</p>

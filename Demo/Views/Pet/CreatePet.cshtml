@@ -1,0 +1,94 @@
+﻿@model PawfectGrooming.Models.PetCreateVM
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = "Add New Pet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form class="form" asp-action="CreatePet" method="post" enctype="multipart/form-data">
+    <h1 class="section-title">@Localizer["Add New Pet"]</h1>
+    <p class="form-description">
+        @Localizer["Provide a brief summary of the pet’s personality, behavior, and any special traits. This helps staff or adopters understand the pet better."]
+    </p>
+    <div class="form-group">
+        <label>@Localizer["Name"]</label>
+        <input asp-for="Name"/>
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Pet Type"]</label>
+        <select asp-for="PetType" asp-items="ViewBag.PetTypeOptions" class="form-control">
+            <option value="">-- @Localizer["Select Pet Type"] --</option>
+        </select>
+        <span asp-validation-for="PetType"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Breed"]</label>
+        <input asp-for="Breed"/>
+        <span asp-validation-for="Breed"></span>
+    </div>
+    <div class="form-group">
+        <label>@Localizer["Gender"]</label>
+        <select asp-for="Gender" asp-items="ViewBag.GenderOptions" class="form-control">
+            <option value="">-- @Localizer["Select Gender"] --</option>
+        </select>
+        <span asp-validation-for="Gender"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Age"]</label>
+        <input asp-for="Age"  type="number" min="0" />
+        <span asp-validation-for="Age"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Weight"]</label>
+        <input asp-for="Weight" type="number" step="0.1" min="0" />
+        <span asp-validation-for="Weight"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Medical Notes"]</label>
+        <textarea asp-for="MedicalNotes" rows="3"></textarea>
+        <span asp-validation-for="MedicalNotes"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Photo"]</label>
+        <label class="upload" id="dropZone">
+            <small id="photoName">@Localizer["Select Photo"]...</small>
+            <input asp-for="Photo" type="file" accept="image/jpeg,image/png" hidden id="photoInput">
+            <div class="image-hover">
+                <img id="photoPreview" src="/images/photo.jpg" alt="@Localizer["Photo"]" />
+            </div>
+        </label>
+		<span asp-validation-for="Photo"></span>
+        <input type="hidden" name="CroppedPhoto" id="CroppedPhoto" />
+    </div>
+    <!-- prompt out for image processing(hidden) -->
+    <div id="cropModal" class="crop-modal">
+        <div class="crop-modal-content">
+            <img id="cropImage" class="crop-image" />
+            <!-- Flip and Rotate Controls -->
+            <div class="crop-controls">
+                <button type="button" id="rotateLeftBtn" class="btn-secondary">⟲ Rotate Left</button>
+                <button type="button" id="rotateRightBtn" class="btn-secondary">⟳ Rotate Right</button>
+                <button type="button" id="flipHorizontalBtn" class="btn-secondary">⇋ Flip Horizontal</button>
+                <button type="button" id="flipVerticalBtn" class="btn-secondary">⇵ Flip Vertical</button>
+            </div>
+            <div class="crop-actions">
+                <button type="button" id="cropBtn" class="btn-primary">Crop & Save</button>
+                <button type="button" id="skipCropBtn" class="btn-secondary">Skip Cropping</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">@Localizer["Create"]</button>
+        <a asp-action="ProfilePet" class="btn btn-secondary">@Localizer["Cancel"]</a>
+    </div>
+</form>

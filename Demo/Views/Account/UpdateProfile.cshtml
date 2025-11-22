@@ -1,0 +1,86 @@
+﻿@model PawfectGrooming.Models.UpdateProfileVM
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Account | Update Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form class="form" method="post" enctype="multipart/form-data">
+    <h1 class="section-title">@Localizer["Update Profile"]</h1>
+    <p class="form-description">
+        @Localizer["UpdateProfile_Description"]
+    </p>
+    <div class="form-group">
+    <label>@Localizer["Email"]</label>
+        <input asp-for="Email" readonly class="locked-field"/>
+    </div>
+
+    <div class="form-group">
+    <label>@Localizer["Name"]</label>
+    <input asp-for="Name" autofocus>
+    <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="form-group">
+		<label>@Localizer["Phone Number"]</label>
+		<input asp-for="PhoneNumber">
+		<span asp-validation-for="PhoneNumber"></span>
+    </div>
+
+    <div class="form-group">
+        <label>@Localizer["Photo"]</label>
+        <label class="upload" id="dropZone">
+            <small id="photoName">@Localizer["Select Photo"]...</small>
+            <input asp-for="Photo" type="file" accept="image/jpeg,image/png" hidden id="photoInput">
+            <div class="image-hover">
+                <img id="photoPreview" src="/images/photo.jpg" alt=@Localizer["Photo"]>
+            </div>
+        </label>
+        <button type="button" id="webcamBtn" class="btn-secondary">📸 @Localizer["Capture Photo"]</button>
+        <br>
+        <span asp-validation-for="Photo"></span>
+        <input type="hidden" name="CroppedPhoto" id="CroppedPhoto" />
+    </div>
+    <!-- prompt out for image processing(hidden) -->
+    <div id="cropModal" class="crop-modal">
+        <div class="crop-modal-content">
+            <img id="cropImage" class="crop-image" />
+            <!-- Flip and Rotate Controls -->
+            <div class="crop-controls">
+                <button type="button" id="rotateLeftBtn" class="btn-secondary">⟲ Rotate Left</button>
+                <button type="button" id="rotateRightBtn" class="btn-secondary">⟳ Rotate Right</button>
+                <button type="button" id="flipHorizontalBtn" class="btn-secondary">⇋ Flip Horizontal</button>
+                <button type="button" id="flipVerticalBtn" class="btn-secondary">⇵ Flip Vertical</button>
+            </div>
+            <div class="crop-actions">
+                <button type="button" id="cropBtn" class="btn-primary">Crop & Save</button>
+                <button type="button" id="skipCropBtn" class="btn-secondary">Skip Cropping</button>
+            </div>
+        </div>
+    </div>
+    <!-- Webcam Modal(hidden) -->
+    <div id="webcamModal" class="crop-modal" style="display:none;z-index:10002;">
+        <div class="crop-modal-content" style="width:400px;">
+            <video id="webcamVideo" width="300" height="300" autoplay style="border-radius:8px;border:1px solid #ccc;"></video>
+            <div class="crop-actions" style="margin-top:12px;">
+                <button type="button" id="captureBtn" class="btn-primary">Capture</button>
+                <button type="button" id="closeWebcamBtn" class="btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button class="btn-primary">@Localizer["Update"]</button>
+        <button class="btn-secondary" type="reset">@Localizer["Reset"]</button>
+    </div>
+</form>
+<script>
+    document.querySelectorAll(".locked-field").forEach(field => {
+        field.addEventListener("click", function () {
+            alert("You can't edit your email");
+        });
+    });
+</script>

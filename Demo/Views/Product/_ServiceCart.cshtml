@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ServiceCartItem>
+<table class="table">
+    <tr>
+        <th>Service</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+    </tr>
+    @foreach (var i in Model)
+    {
+        var list = new SelectList(Enumerable.Range(1, 10), i.Quantity);
+        <tr>
+            <td>@i.Service.Name</td>
+            <td>@i.Service.Price</td>
+            <td>
+                <form data-ajax="true"
+                      data-ajax-update="#target"
+                      method="post"
+                      asp-controller="Home"
+                      asp-action="UpdateCart">
+                    @Html.DropDownList("Quantity", list, "")
+                    @Html.Hidden("ServiceId", i.Service.Id)
+                </form>
+            </td>
+            <td>@i.Subtotal</td>
+        </tr>
+    }
+    <tr>
+        <td></td>
+        <td></td>
+        <td class="bold">@Model.Sum(i => i.Quantity)</td>
+        <td class="bold">@Model.Sum(i => i.Subtotal)</td>
+    </tr>
+</table>
+<button data-post="@Url.Action("Checkout","Home")">Checkout</button>

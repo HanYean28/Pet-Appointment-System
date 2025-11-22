@@ -1,0 +1,179 @@
+@model PawfectGrooming.Models.Payment
+@{
+    ViewData["Title"] = "E-Wallet Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var baseAmount = (decimal)(ViewBag.BaseAmount ?? 0m);
+    var discount = (decimal)(ViewBag.Discount ?? 0m);
+    var payable = (decimal)(ViewBag.PayableNow ?? 0m);
+}
+
+<div class="wallet-payment-container">
+    <div class="wallet-payment-box">
+        <h2 class="title">E-Wallet Payment</h2>
+        <p class="subtitle">Quick and secure payment with your mobile wallet</p>
+
+        <!-- Payment Summary -->
+        <div class="payment-summary-box">
+            <h3>Payment Summary</h3>
+            <p><strong>Booking ID:</strong> @Model.BookingId</p>
+            <p><strong>Payment Type:</strong> @Model.PaymentType</p>
+
+            @if (string.Equals(Model.PaymentType, "Deposit", StringComparison.OrdinalIgnoreCase))
+            {
+                <p><strong>Amount:</strong> <span class="amount">RM 20.00</span></p>
+            }
+            else
+            {
+                <p><strong>Base:</strong> RM @baseAmount.ToString("0.00")</p>
+                <p><strong>Discount:</strong> - RM @discount.ToString("0.00")</p>
+                <hr />
+                <p><strong>Amount:</strong> <span class="amount">RM @payable.ToString("0.00")</span></p>
+            }
+        </div>
+
+        <!-- Payment Form -->
+        @using (Html.BeginForm("Create", "Payment", FormMethod.Post, new { @class = "wallet-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.BookingId)
+            @Html.Hidden("PaymentMethod", "E-Wallet") <!-- ensure value posts correctly -->
+            @Html.HiddenFor(m => m.PaymentType)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.WalletProvider, new { @class = "form-label" })
+                @Html.DropDownListFor(m => m.WalletProvider,
+                    new SelectList(new[] { "GrabPay", "Touch 'n Go", "Boost", "ShopeePay", "BigPay", "Fave", "Lazada Wallet" }),
+                    "Select E-Wallet",
+                    new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(m => m.WalletProvider, "", new { @class = "validation-error" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.WalletId, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.WalletId, new { @class = "form-control", placeholder = "ABCDE 12345", maxlength = "11", required = "required", id = "WalletId" })
+                @Html.ValidationMessageFor(m => m.WalletId, "", new { @class = "validation-error" })
+            </div>
+
+            <div class="payment-actions">
+                <a href="@Url.Action("Create", new { bookingId = Model.BookingId, paymentType = Model.PaymentType })" class="btn btn-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">Pay Now</button>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        // WalletId validation: only alphanumeric, uppercase, max 10 chars, auto space every 5 chars
+        document.getElementById("WalletId").addEventListener("input", function (e) {
+            let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+            value = value.substring(0, 10); // Max 10 chars
+            if (value.length > 5) {
+                value = value.substring(0, 5) + " " + value.substring(5);
+            }
+            e.target.value = value;
+        });
+    </script>
+}
+
+<style>
+    .wallet-payment-container {
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+        font-family: 'Inter',sans-serif;
+    }
+
+    .wallet-payment-box {
+        background: #fff;
+        padding: 32px;
+        border-radius: 20px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 16px 32px rgba(0,0,0,0.1);
+    }
+
+    .title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #6b7280;
+        margin-bottom: 20px;
+    }
+
+    .payment-summary-box {
+        background: linear-gradient(135deg,#ecfdf5,#d1fae5);
+        border: 1px solid #a7f3d0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .amount {
+        font-weight: 700;
+        font-size: 20px;
+        color: #059669;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+    }
+
+    .validation-error {
+        color: #dc2626;
+        font-size: 13px;
+    }
+
+    .payment-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg,#10b981,#34d399);
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all .3s;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(16,185,129,0.4);
+        }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+</style>
+

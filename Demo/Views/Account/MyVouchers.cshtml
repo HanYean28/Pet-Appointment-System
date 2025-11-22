@@ -1,0 +1,746 @@
+﻿@model PawfectGrooming.Models.VouchersVM
+@{
+    ViewData["Title"] = "My Vouchers";
+
+    var redeemableCount = Model.CurrentPoints / 100;
+    var remainderToNext = Model.CurrentPoints % 100;
+    var progressPercent = Math.Min(100, (int)Math.Round((remainderToNext / 100m) * 100));
+    string Pluralize(int n, string singular, string plural) => n == 1 ? singular : plural;
+}
+
+<div class="pv-scope">
+    <section class="pv-header-card">
+        <div class="pv-header-left">
+            <div class="pv-hero-icon" aria-hidden="true">🎟️</div>
+            <div>
+                <h1 class="pv-title">My Vouchers</h1>
+                <p class="pv-subtitle">Manage and redeem your vouchers. Apply at checkout for Full Payment only.</p>
+            </div>
+        </div>
+
+        <div class="pv-header-right">
+            <div class="pv-points">
+                <div class="pv-points-label">Current Points</div>
+                <div class="pv-points-value">@Model.CurrentPoints</div>
+                <div class="pv-points-hint">
+                    @if (redeemableCount > 0)
+                    {
+                        <text>You can redeem @redeemableCount @Pluralize(redeemableCount, "voucher", "vouchers") now.</text>
+                    }
+                    else
+                    {
+                        <text>@(100 - remainderToNext) more points to next voucher.</text>
+                    }
+                </div>
+            </div>
+
+            <div class="pv-progress">
+                <div class="pv-progress-bar" style="width:@progressPercent%"></div>
+                <div class="pv-progress-text">@remainderToNext / 100 pts</div>
+            </div>
+
+            <form asp-controller="Account" asp-action="RedeemVoucher" method="post" class="pv-redeem-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="pv-btn pv-btn-primary" @(Model.CurrentPoints >= 100 ? null : new { disabled = "disabled" })>
+                    Redeem RM5 (100 pts)
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <section class="pv-controls">
+        <ul class="pv-tabs" role="tablist">
+            <li role="presentation">
+                <button class="pv-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="pv-panel-available" data-target="pv-panel-available">
+                    Available (@Model.Available.Count)
+                </button>
+            </li>
+            <li role="presentation">
+                <button class="pv-tab" type="button" role="tab" aria-selected="false" aria-controls="pv-panel-used" data-target="pv-panel-used">
+                    Used (@Model.Used.Count)
+                </button>
+            </li>
+            <li role="presentation">
+                <button class="pv-tab" type="button" role="tab" aria-selected="false" aria-controls="pv-panel-expired" data-target="pv-panel-expired">
+                    Expired (@Model.Expired.Count)
+                </button>
+            </li>
+        </ul>
+
+        <div class="pv-filters">
+            <div class="pv-search">
+                <span class="pv-search-icon" aria-hidden="true">🔎</span>
+                <input id="voucher-search" type="text" class="pv-input" placeholder="Search code (e.g., SAVE5)" />
+            </div>
+
+            <label class="pv-sort">
+                <span class="pv-sort-label">Sort</span>
+                <select id="voucher-sort" class="pv-select">
+                    <option value="default">Default</option>
+                    <option value="expiry_asc">Expiry: Soonest</option>
+                    <option value="expiry_desc">Expiry: Latest</option>
+                </select>
+            </label>
+        </div>
+    </section>
+
+    <section class="pv-panels">
+        <!-- Available -->
+        <div id="pv-panel-available" class="pv-panel is-active" role="tabpanel" aria-labelledby="Available">
+            @if (Model.Available.Any())
+            {
+                <div id="available-grid" class="pv-grid">
+                    @foreach (var v in Model.Available)
+                    {
+                        var localExpiry = v.ExpiryDate.ToLocalTime();
+                        var daysLeft = (int)Math.Ceiling((localExpiry.Date - DateTime.Now.Date).TotalDays);
+                        var expiringSoon = daysLeft <= 7 && daysLeft >= 0;
+
+                        <article class="pv-card voucher-card"
+                                 data-code="@v.Code.ToLowerInvariant()"
+                                 data-amount="@v.DiscountAmount"
+                                 data-expiry="@localExpiry.ToString("yyyy-MM-dd")">
+                            <div class="pv-card-top">
+                                <span class="pv-badge pv-badge-success">Available</span>
+                                @if (expiringSoon)
+                                {
+                                    <span class="pv-badge pv-badge-warning">Expiring in @daysLeft @Pluralize(daysLeft, "day", "days")</span>
+                                }
+                            </div>
+
+                            <div class="pv-row">
+                                <div>
+                                    <div class="pv-label">Code</div>
+                                    <div class="pv-code">@v.Code</div>
+                                </div>
+                                <div class="pv-right">
+                                    <div class="pv-label">Amount</div>
+                                    <div class="pv-amount">RM @v.DiscountAmount.ToString("0.00")</div>
+                                </div>
+                            </div>
+
+                            <div class="pv-row">
+                                <div>
+                                    <div class="pv-label">Expiry</div>
+                                    <div class="pv-value">@localExpiry.ToString("yyyy-MM-dd")</div>
+                                </div>
+                            </div>
+
+                            <div class="pv-actions">
+                                <button type="button" class="pv-btn pv-btn-outline pv-btn-sm v-copy-btn" data-code="@v.Code">Copy code</button>
+                                <a asp-controller="Home" asp-action="AppointmentsList" class="pv-btn pv-btn-primary pv-btn-sm">Use at checkout</a>
+                            </div>
+
+                            <p class="pv-note">Apply at checkout for Full Payment only. Deposits don’t accept vouchers.</p>
+                        </article>
+                    }
+                </div>
+
+                <div id="available-empty" class="pv-empty pv-hidden">No vouchers match your search.</div>
+            }
+            else
+            {
+                <div class="pv-empty-card">
+                    <p>You don’t have available vouchers yet.</p>
+                    <p>Earn points by completing appointments, then redeem vouchers here.</p>
+                    <a asp-controller="Home" asp-action="AppointmentsList" class="pv-btn pv-btn-outline">My Appointments</a>
+                </div>
+            }
+        </div>
+
+        <!-- Used -->
+        <div id="pv-panel-used" class="pv-panel" role="tabpanel" aria-labelledby="Used">
+            @if (Model.Used.Any())
+            {
+                <div class="pv-table-wrap">
+                    <table class="pv-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Amount</th>
+                                <th>Used/Expiry</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model.Used)
+                            {
+                                <tr>
+                                    <td><span class="pv-badge pv-badge-secondary">@v.Code</span></td>
+                                    <td><strong>RM @v.DiscountAmount.ToString("0.00")</strong></td>
+                                    <td>@v.ExpiryDate.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="pv-empty">No used vouchers.</p>
+            }
+        </div>
+
+        <!-- Expired -->
+        <div id="pv-panel-expired" class="pv-panel" role="tabpanel" aria-labelledby="Expired">
+            @if (Model.Expired.Any())
+            {
+                <div class="pv-table-wrap">
+                    <table class="pv-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Amount</th>
+                                <th>Expired On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model.Expired)
+                            {
+                                <tr>
+                                    <td><span class="pv-badge pv-badge-danger">@v.Code</span></td>
+                                    <td><strong>RM @v.DiscountAmount.ToString("0.00")</strong></td>
+                                    <td>@v.ExpiryDate.ToLocalTime().ToString("yyyy-MM-dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="pv-empty">No expired vouchers.</p>
+            }
+        </div>
+    </section>
+
+    <section class="pv-rules">
+        <h2 class="pv-rules-title">How vouchers work</h2>
+        <ul class="pv-rules-list">
+            <li>RM 5 voucher costs 100 points to redeem.</li>
+            <li>Vouchers apply to Full Payment only. Deposits cannot use vouchers.</li>
+            <li>One voucher per booking. Apply the code at checkout.</li>
+            <li>Vouchers have an expiry date and cannot be used after expiry.</li>
+        </ul>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Tabs
+            const tabs = document.querySelectorAll('.pv-tab');
+            const panels = document.querySelectorAll('.pv-panel');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.dataset.target;
+                    tabs.forEach(t => t.classList.remove('is-active'));
+                    panels.forEach(p => p.classList.remove('is-active'));
+                    tab.classList.add('is-active');
+                    document.getElementById(targetId)?.classList.add('is-active');
+                });
+            });
+
+            // Copy
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.v-copy-btn');
+                if (!btn) return;
+                const code = btn.getAttribute('data-code');
+                navigator.clipboard.writeText(code).then(() => {
+                    const original = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('is-success');
+                    setTimeout(() => {
+                        btn.textContent = original;
+                        btn.classList.remove('is-success');
+                    }, 1200);
+                });
+            });
+
+            // Search + Sort (expiry only)
+            const scope = document.querySelector('.pv-scope');
+            const searchInput = document.getElementById('voucher-search');
+            const sortSelect = document.getElementById('voucher-sort');
+            const grid = document.getElementById('available-grid');
+            const empty = document.getElementById('available-empty');
+
+            function applyFilterAndSort() {
+                if (!grid) return;
+
+                const q = (searchInput?.value || '').trim().toLowerCase();
+                const items = Array.from(grid.querySelectorAll('.voucher-card')); // exact elements
+
+                // Filter
+                let visible = 0;
+                items.forEach(item => {
+                    const code = (item.dataset.code || '').toLowerCase();
+                    const show = !q || code.includes(q);
+                    item.classList.toggle('pv-hidden', !show);
+                    if (show) visible++;
+                });
+
+                // Sort (only expiry asc/desc); keep hidden items in DOM but order all for stability
+                const sort = sortSelect?.value || 'default';
+                if (sort !== 'default') {
+                    const getDate = el => new Date(el.dataset.expiry || '2100-01-01');
+                    items.sort((a, b) => {
+                        const da = getDate(a);
+                        const db = getDate(b);
+                        return sort === 'expiry_asc' ? da - db : db - da;
+                    });
+                    // Re-append in sorted order
+                    items.forEach(el => grid.appendChild(el));
+                }
+
+                // Empty state (use pv-hidden to avoid relying on Bootstrap)
+                if (empty) empty.classList.toggle('pv-hidden', visible > 0);
+            }
+
+            // Single delegated handlers
+            scope.addEventListener('input', (e) => {
+                if (e.target === searchInput) applyFilterAndSort();
+            });
+            scope.addEventListener('change', (e) => {
+                if (e.target === sortSelect) applyFilterAndSort();
+            });
+
+            // Initial
+            applyFilterAndSort();
+        })();
+    </script>
+}
+
+<style>
+    /* Scope everything to pv-scope to avoid collisions */
+    .pv-scope {
+        --pv-bg: #fff;
+        --pv-text: #111827;
+        --pv-muted: #6b7280;
+        --pv-border: #e5e7eb;
+        --pv-primary: #2563eb;
+        --pv-primary-2: #3b82f6;
+        --pv-success: #059669;
+        --pv-warning: #f59e0b;
+        --pv-danger: #dc2626;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+        color: var(--pv-text);
+    }
+
+        .pv-scope * {
+            box-sizing: border-box;
+        }
+
+        .pv-scope a {
+            text-decoration: none;
+        }
+
+    /* Header */
+    .pv-header-card {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        background: var(--pv-bg);
+        border: 1px solid var(--pv-border);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.06);
+        margin: 16px auto;
+        max-width: 1100px;
+    }
+
+    .pv-header-left {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .pv-hero-icon {
+        font-size: 28px;
+    }
+
+    .pv-title {
+        font-size: 22px;
+        font-weight: 800;
+        margin: 0 0 4px;
+    }
+
+    .pv-subtitle {
+        margin: 0;
+        color: var(--pv-muted);
+    }
+
+    .pv-header-right {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .pv-points-label {
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--pv-muted);
+    }
+
+    .pv-points-value {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--pv-success);
+        line-height: 1.1;
+    }
+
+    .pv-points-hint {
+        font-size: 13px;
+        color: var(--pv-muted);
+    }
+
+    .pv-progress {
+        position: relative;
+        width: 180px;
+        height: 10px;
+        background: #eef2f7;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .pv-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #34d399);
+        transition: width .3s;
+    }
+
+    .pv-progress-text {
+        position: absolute;
+        top: 14px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+        color: var(--pv-muted);
+    }
+
+    .pv-redeem-form {
+        display: flex;
+    }
+
+    /* Controls */
+    .pv-controls {
+        max-width: 1100px;
+        margin: 0 auto 12px;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .pv-tabs {
+        list-style: none;
+        display: flex;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pv-tab {
+        border: 1px solid var(--pv-border);
+        background: #fff;
+        color: var(--pv-text);
+        padding: 8px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+        .pv-tab.is-active {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+            color: #4338ca;
+        }
+
+    .pv-filters {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .pv-search {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--pv-border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .pv-search-icon {
+        padding: 0 8px;
+    }
+
+    .pv-input {
+        border: none;
+        outline: none;
+        padding: 10px 12px;
+        min-width: 220px;
+    }
+
+    .pv-sort {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .pv-sort-label {
+        font-size: 12px;
+        color: var(--pv-muted);
+    }
+
+    .pv-select {
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--pv-border);
+        background: #fff;
+    }
+
+    /* Panels */
+    .pv-panels {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .pv-panel {
+        display: none;
+    }
+
+        .pv-panel.is-active {
+            display: block;
+        }
+
+    /* Grid and cards */
+    .pv-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .pv-card {
+        border: 1px solid var(--pv-border);
+        border-radius: 16px;
+        background: #fff;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.05);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pv-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .pv-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .pv-right {
+        text-align: right;
+    }
+
+    .pv-label {
+        font-size: 12px;
+        color: var(--pv-muted);
+    }
+
+    .pv-code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: .5px;
+    }
+
+    .pv-amount {
+        color: var(--pv-success);
+        font-weight: 800;
+        font-size: 18px;
+    }
+
+    .pv-value {
+        font-weight: 600;
+    }
+
+    .pv-note {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: var(--pv-muted);
+    }
+
+    .pv-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .pv-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-weight: 600;
+        background: #f8fafc;
+        color: #111827;
+        transition: all .15s ease;
+    }
+
+        .pv-btn[disabled] {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .pv-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0,0,0,.08);
+        }
+
+    .pv-btn-primary {
+        background: linear-gradient(135deg, var(--pv-primary), var(--pv-primary-2));
+        color: #fff;
+    }
+
+    .pv-btn-outline {
+        background: #fff;
+        border-color: var(--pv-border);
+    }
+
+    .pv-btn-sm {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .pv-btn.is-success {
+        background: linear-gradient(135deg, #10b981, #34d399);
+        color: #fff;
+        border-color: transparent;
+    }
+
+    .pv-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid transparent;
+    }
+
+    .pv-badge-success {
+        color: #065f46;
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+    }
+
+    .pv-badge-warning {
+        color: #78350f;
+        background: #fffbeb;
+        border-color: #fde68a;
+    }
+
+    .pv-badge-secondary {
+        color: #374151;
+        background: #f3f4f6;
+        border-color: #e5e7eb;
+    }
+
+    .pv-badge-danger {
+        color: #7f1d1d;
+        background: #fef2f2;
+        border-color: #fecaca;
+    }
+
+    .pv-empty {
+        text-align: center;
+        color: var(--pv-muted);
+        font-style: italic;
+        padding: 16px 0;
+    }
+
+    .pv-empty-card {
+        border: 1px solid var(--pv-border);
+        background: #fff;
+        border-radius: 16px;
+        text-align: center;
+        padding: 28px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.05);
+        display: flex;
+        gap: 8px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pv-hidden {
+        display: none !important;
+    }
+
+    /* Tables */
+    .pv-table-wrap {
+        border: 1px solid var(--pv-border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(0,0,0,.05);
+    }
+
+    .pv-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .pv-table th, .pv-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--pv-border);
+            text-align: left;
+        }
+
+        .pv-table thead th {
+            background: #f8fafc;
+            font-size: 13px;
+            color: var(--pv-muted);
+            text-transform: uppercase;
+        }
+
+        .pv-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+    /* Rules */
+    .pv-rules {
+        max-width: 1100px;
+        margin: 16px auto 32px;
+        border: 1px solid var(--pv-border);
+        border-radius: 16px;
+        background: #fff;
+        padding: 16px 18px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.05);
+    }
+
+    .pv-rules-title {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .pv-rules-list {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--pv-muted);
+    }
+</style>

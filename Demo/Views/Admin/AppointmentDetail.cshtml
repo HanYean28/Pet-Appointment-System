@@ -1,0 +1,107 @@
+﻿@model PawfectGrooming.Models.Booking
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+
+@{
+    ViewBag.Title = Localizer["Appointment Detail"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string ResolveImage(string img, string source)
+    {
+        if (string.IsNullOrWhiteSpace(img)) return Url.Content("~/images/noimage.png");
+        if (img.StartsWith("http", StringComparison.OrdinalIgnoreCase) || img.StartsWith("/")) return img;
+        var folder = source == "service" ? "Service_Images" : "Package_Images";
+        return Url.Content($"~/images/{folder}/{img}");
+    }
+
+    var sourceType = Model.Service != null ? "service" : "package";
+    var images = Model.Service?.ImageURL ?? Model.Package?.ImageURL ?? new List<string>();
+    var resolved = images.Select(i => ResolveImage(i, sourceType)).ToList();
+    var mainSrc = resolved.FirstOrDefault() ?? Url.Content("~/images/noimage.png");
+}
+
+<section class="admin-section">
+    <h1 class="section-title">@Localizer["Appointment Detail"]</h1>
+
+    <div class="gallery" style="text-align:center;margin-bottom:1.5rem;">
+        <button type="button" class="gallery-arrow left">◀</button>
+        <img id="mainGalleryImage" class="standard-image" src="@mainSrc" alt="Appointment Image" />
+        <button type="button" class="gallery-arrow right">▶</button>
+
+        @if (resolved.Any())
+        {
+            <div id="thumbs" style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
+                @for (int i = 0; i < resolved.Count; i++)
+                {
+                    <img class="thumb" data-index="@i" src="@resolved[i]" style="width:80px;height:56px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid transparent" />
+                }
+            </div>
+        }
+    </div>
+
+    <table class="table detail">
+        <tr><th>@Localizer["Email"]</th><td>@Model.UserEmail</td></tr>
+        <tr><th>@Localizer["Date"]</th><td>@Model.Date.ToString("yyyy-MM-dd")</td></tr>
+        <tr><th>@Localizer["Time"]</th><td>@Model.Time</td></tr>
+        <tr><th>@Localizer["Pet"]</th><td>@Model.Pet?.Name</td></tr>
+        <tr><th>@Localizer["Price"]</th><td>@Model.Price</td></tr>
+        <tr><th>@Localizer["Status"]</th><td>@(Model.IsActive? Localizer["Active"] : Localizer["Inactive"])</td></tr>
+
+        @if (Model.Service != null)
+        {
+            <tr><th>@Localizer["Service"]</th><td>@Model.Service.Name</td></tr>
+            <tr><th>@Localizer["Description"]</th><td>@Model.Service.Description</td></tr>
+            <tr><th>@Localizer["Pet Type"]</th><td>@Model.Service.PetType</td></tr>
+        }
+        else if (Model.Package != null)
+        {
+            <tr><th>@Localizer["Package"]</th><td>@Model.Package.Name</td></tr>
+            <tr><th>@Localizer["Description"]</th><td>@Model.Package.Description</td></tr>
+            <tr><th>@Localizer["Pet Type"]</th><td>@Model.Package.PetType</td></tr>
+        }
+    </table>
+
+    <p>
+        <a asp-action="AppointmentList" class="btn">@Localizer["Go back"]</a>
+    </p>
+</section>
+
+@section foot {
+    <script>
+        (function () {
+            const images = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(resolved));
+            const main = document.getElementById('mainGalleryImage');
+            let idx = 0;
+            function setIndex(i) {
+                if (!images || images.length === 0) return;
+                idx = (i + images.length) % images.length;
+                if (main) main.src = images[idx];
+                document.querySelectorAll('#thumbs .thumb').forEach(t => t.style.borderColor = 'transparent');
+                const t = document.querySelector('#thumbs .thumb[data-index="' + idx + '"]');
+                if (t) t.style.borderColor = '#3b8beb';
+            }
+            document.querySelectorAll('#thumbs .thumb').forEach(t => t.addEventListener('click', function () { setIndex(parseInt(this.dataset.index)); }));
+            document.querySelectorAll('.gallery-arrow.left').forEach(b => b.addEventListener('click', () => setIndex(idx - 1)));
+            document.querySelectorAll('.gallery-arrow.right').forEach(b => b.addEventListener('click', () => setIndex(idx + 1)));
+            setIndex(0);
+        })();
+    </script>
+    <style>
+        .gallery-arrow {
+            background: rgba(255,255,255,0.85);
+            border: none;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+        }
+
+            .gallery-arrow:hover {
+                background: #fff;
+            }
+
+        .thumb:hover {
+            transform: scale(1.03);
+        }
+    </style>
+}

@@ -1,0 +1,177 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<PawfectGrooming.Models.Booking>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Appointments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="appointments-list-booked-section">
+    <h1 class="section-title">@Localizer["My Appointments"]</h1>
+
+    <div class="appointments-list-booked-list">
+        <div class="appointments-list-booked-header">
+            <h2>@Localizer["Upcoming Appointments"]</h2>
+            <div class="appointments-list-header-actions">
+                <a href="/Home/Services" class="appointments-list-btn-next">
+                    <span>+</span> @Localizer["New Appointment"]
+                </a>
+
+                @{ 
+                    var sortLower = (ViewBag.Sort ?? "").ToString().ToLowerInvariant();
+                    var dirLower = (ViewBag.Dir ?? "asc").ToString().ToLowerInvariant();
+
+                    string dateArrow = sortLower == "date" ? (dirLower == "asc" ? "▲" : "▼") : "";
+                    string statusArrow = sortLower == "status" ? (dirLower == "asc" ? "▲" : "▼") : "";
+
+                    var nextDateDir = (sortLower == "date" && dirLower == "asc") ? "desc" : "asc";
+                    var nextStatusDir = (sortLower == "status" && dirLower == "asc") ? "desc" : "asc";
+                }
+                <div class="appointments-list-sort" style="display:inline-block;margin-left:1rem;">
+                    <span>@Localizer["Sort:"]</span>
+                    @Html.ActionLink($"{Localizer["Date"]} {dateArrow}", "AppointmentsList", new { sort = "Date", dir = nextDateDir }, new { @class = "appointments-list-sort-link", style = "margin-left:.5rem" })
+                    |
+                    @Html.ActionLink($"{Localizer["Status"]} {statusArrow}", "AppointmentsList", new { sort = "Status", dir = nextStatusDir }, new { @class = "appointments-list-sort-link", style = "margin-left:.5rem" })
+                </div>
+            </div>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="appointments-list-empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" style="width:58px;height:58px;" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p class="text-lg font-medium">@Localizer["No appointments yet"]</p>
+                <p>@Localizer["Book your first appointment to get started"]</p>
+                <a href="/Home/Services" class="appointments-list-home-btn">@Localizer["Book Appointment"]</a>
+            </div>
+        }
+        else
+        {
+            @foreach (var appt in Model)
+            {
+                <div class="appointments-list-appointment-card">
+
+                    <!-- STATUS BADGE (absolute at top-right) -->
+                    <div class="appointments-list-status-container">
+                        @{
+                            var status = appt.Status ?? "";
+                            var displayStatus = status == "PendingPayment" ? "Pending Payment" : status;
+                            var statusClass = status.ToLower().Replace(" ", "").Replace("_", "");
+                        }
+                        <span class="status-badge status-@statusClass">@Localizer[displayStatus]</span>
+                    </div>
+
+                    <!-- CARD BODY -->
+                    <div class="appointments-list-card-body">
+                        <div class="appointments-list-left-block">
+                            <div class="appointments-list-left">
+                                @Html.Raw(appt.Pet?.Name ?? "<span style=\"color:#ef4444\">(No Pet)</span>")
+                            </div>
+                            <div class="appointments-list-service">
+                                @if (appt.Service != null)
+                                {
+                                    @Localizer[@appt.Service.Name]
+                                }
+                                else if (appt.Package != null)
+                                {
+                                    @Localizer[@appt.Package.Name]
+                                }
+                                else
+                                {
+                                    <span style="color:#ef4444">(No Service/Package Selected)</span>
+                                }
+                            </div>
+                            <div class="appointments-list-actions">
+                                @{
+                                    var isDisabled = appt.Status == "Completed" || appt.Status == "Cancelled";
+                                }
+                                @if (isDisabled)
+                                {
+                                    <a class="appointments-list-reschedule" style="pointer-events:none;opacity:0.5;" tabindex="-1" aria-disabled="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#2563eb">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 4v5h.582m15.418-5v5M5.582 9A7.001 7.001 0 0012 19a7 7 0 006.418-10H19V4m0 0H5">
+                                            </path>
+                                        </svg>
+                                        @Localizer["Reschedule"]
+                                    </a>
+                                    <button class="appointments-list-cancel" disabled style="opacity:0.5;pointer-events:none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#ef466f">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H7V5a2 2 0 012-2h4z">
+                                            </path>
+                                        </svg>
+                                        @Localizer["Cancel"]
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a asp-action="Reschedule" asp-controller="Home" asp-route-id="@appt.Id" class="appointments-list-reschedule">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#2563eb">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 4v5h.582m15.418-5v5M5.582 9A7.001 7.001 0 0012 19a7 7 0 006.418-10H19V4m0 0H5">
+                                            </path>
+                                        </svg>
+                                        @Localizer["Reschedule"]
+                                    </a>
+                                    <form asp-action="Cancel" asp-route-id="@appt.Id" method="post" style="display:inline-block;">
+                                        <button type="submit" class="appointments-list-cancel"
+                                                onclick="return confirm('@Localizer["Are you sure you want to cancel this appointment?"]');">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#ef466f">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H7V5a2 2 0 012-2h4z">
+                                                </path>
+                                            </svg>
+                                            @Localizer["Cancel"]
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                        <div class="appointments-list-right">
+                            <div class="appointments-list-date">
+                                @appt.Date.ToString("ddd, MMM dd") @appt.Time
+                            </div>
+                            <p class="appointments-list-price">@("RM" + appt.Price.ToString("N0"))</p>
+                            @if (appt.Status == "PendingPayment")
+                            {
+                                <a asp-action="Create" asp-controller="Payment" asp-route-bookingId="@appt.Id" class="appointments-list-pay-btn">@Localizer["Pay"]</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        @* Pager *@
+        @{
+            var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+            options.LinkToFirstPageFormat = Localizer["First"];
+            options.LinkToLastPageFormat = Localizer["Last"];
+            options.LinkToPreviousPageFormat = Localizer["Previous"];
+            options.LinkToNextPageFormat = Localizer["Next"];
+
+            var ajaxOptions = new AjaxOptions
+            {
+                HttpMethod = "get",
+                UpdateTargetId = "target",
+                LoadingElementId = "#loader",
+            };
+        }
+
+        <div class="appointments-list-pager" style="margin-top:1rem;">
+            @Html.PagedListPager(
+                Model,
+                p => $"?sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+                PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+            )
+        </div>
+    </div>
+</section>

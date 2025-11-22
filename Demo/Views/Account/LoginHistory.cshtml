@@ -1,0 +1,28 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@model IEnumerable<PawfectGrooming.Models.LoginHistory>
+
+@{
+    ViewBag.Title = "Login History";
+}
+
+<h6 class="section-title">@Localizer["Login History"]</h6>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Localizer["Date"] &amp; @Localizer["Time"]</th>
+            <th>@Localizer["Devices"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LoginTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@Helper.ParseUserAgent(item.Devices)</td>
+            </tr>
+        }
+    </tbody>
+</table>

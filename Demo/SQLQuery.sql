@@ -1,0 +1,2 @@
+﻿-- SQL Script: Executes key database operations
+-- DELETE FROM Users WHERE Email = 'Example@gmail.com';

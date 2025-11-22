@@ -1,0 +1,200 @@
+﻿@model PawfectGrooming.Controllers.ProductController.StatusViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isAdmin = User.IsInRole("Admin");
+    var currentUserEmail = User.Identity?.Name;
+}
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+<style>
+    /* reuse existing look & feel */
+    .status-calendar {
+        width: 100%;
+        border: 1px solid #e6edf3;
+        background: #fff;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 6px 18px rgba(16,30,54,0.04);
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .status-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Segoe UI, Roboto, sans-serif;
+        table-layout: fixed;
+        min-width: 800px;
+    }
+
+        .status-table th, .status-table td {
+            padding: 4px 2px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: center;
+            font-size: 11px;
+            vertical-align: top;
+            width: auto;
+            min-width: 30px;
+        }
+
+            .status-table th.room {
+                text-align: left;
+                width: 120px;
+                min-width: 120px;
+                font-weight: 600;
+                position: sticky;
+                left: 0;
+                background: #fff;
+                z-index: 10;
+            }
+
+    .cell-available {
+        background: #dff6df;
+        min-height: 34px;
+    }
+
+    .cell-occupied {
+        background: #ffd6d0;
+        min-height: 34px;
+    }
+
+    .slot {
+        display: block;
+        font-size: 12px;
+        color: #111;
+        margin: 2px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .legend {
+        margin: 10px 0 14px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .swatch {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .pager {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        align-items: center;
+    }
+
+        .pager a {
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #f3f4f6;
+            color: #111;
+        }
+</style>
+
+<div class="container">
+    <h1>@(isAdmin ? "Booking Status":"My Booking & Available Time Slots")</h1>
+
+    <div class="pager">
+        @{
+            var prev = new DateTime(Model.Year, Model.Month, 1).AddMonths(-1);
+            var next = new DateTime(Model.Year, Model.Month, 1).AddMonths(1);
+        }
+        <a href="@Url.Action("Status", "Product", new { year = prev.Year, month = prev.Month })">&lt; @prev.ToString("MMMM yyyy")</a>
+        <strong>@Model.MonthName @Model.Year</strong>
+        <a href="@Url.Action("Status", "Product", new { year = next.Year, month = next.Month })">@next.ToString("MMMM yyyy") &gt;</a>
+    </div>
+
+    <div class="legend">
+        <div><span class="swatch" style="background:#dff6df;"></span> Available</div>
+        <div><span class="swatch" style="background:#ffd6d0;"></span> Booked</div>
+    </div>
+
+    <div class="status-calendar">
+        <table class="status-table">
+            <thead>
+                <tr>
+                    <th class="room">Day</th>
+                    @for (int d = 1; d <= Model.DaysInMonth; d++)
+                    {
+                        <th>@d.ToString("00")</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="room">Time slots</td>
+                    @for (int d = 1; d <= Model.DaysInMonth; d++)
+                    {
+                        var slots = Model.DaySlots.ContainsKey(d) ? Model.DaySlots[d] : new List<string>();
+                        var css = slots.Any() ? "cell-occupied" : "cell-available";
+                        <td class="@css">
+                            @if (slots.Any())
+                            {
+                                foreach (var s in slots)
+                                {
+                                    <span class="slot" title="@s">@s</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="slot" style="color:#6b7280;">&nbsp;</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top:18px;">
+        <h4>Bookings (this month)</h4>
+        <table class="status-table" style="width:100%; margin-top:8px;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Email"]</th>
+                    <th>@Localizer["Pet"]</th>
+                    <th>@Localizer["Service/Package"]</th>
+                    <th>@Localizer["Date"]</th>
+                    <th>@Localizer["Time"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (!Model.Bookings.Any())
+                    {
+                        <tr><td colspan="7">No bookings</td></tr>
+                    }
+                    else
+                    {
+                        int idx = 1;
+                        foreach (var b in Model.Bookings)
+                        {
+                            <tr>
+                                <td>@idx</td>
+                                <td>@(b.User?.Name ?? b.UserEmail)</td>
+                                <td>@b.UserEmail</td>
+                                <td>@(b.Pet?.Name ?? "-")</td>
+                                <td>@(b.Service != null ? b.Service.Name : (b.Package != null ? b.Package.Name : "-"))</td>
+                                <td>@b.Date.ToString("yyyy-MM-dd")</td>
+                                <td>@b.Time</td>
+                            </tr>
+                            idx++;
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

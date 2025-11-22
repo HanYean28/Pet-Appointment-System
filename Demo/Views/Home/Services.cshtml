@@ -1,0 +1,203 @@
+﻿@using Microsoft.Extensions.Localization
+@using PawfectGrooming.Models
+@using System.Text.Json
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@model List<PawfectGrooming.Models.ServiceOption>
+
+@{
+    ViewBag.Title = "Services";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var packages = ViewBag.Packages as List<Package> ?? new List<Package>();
+
+    string ResolveImage(string img, string kind = "Service")
+    {
+        if (string.IsNullOrWhiteSpace(img)) return Url.Content("~/images/noimage.png");
+        if (img.StartsWith("http", StringComparison.OrdinalIgnoreCase) || img.StartsWith("/")) return img;
+        return Url.Content($"~/images/{(kind == "Package" ? "Package_Images" : "Service_Images")}/{img}");
+    }
+
+    // build typed lists and deduplicated unions for "All"
+    var minPriceQuery = ViewContext.HttpContext.Request.Query["minPrice"];
+    var maxPriceQuery = ViewContext.HttpContext.Request.Query["maxPrice"];
+    var minPrice = string.IsNullOrEmpty(minPriceQuery) ? 0 : Convert.ToDecimal(minPriceQuery);
+    var maxPrice = string.IsNullOrEmpty(maxPriceQuery) ? decimal.MaxValue : Convert.ToDecimal(maxPriceQuery);
+
+    var dogServices = (Model ?? new List<ServiceOption>())
+                        .Where(s => string.Equals(s.PetType, "Dog", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+    var catServices = (Model ?? new List<ServiceOption>())
+                        .Where(s => string.Equals(s.PetType, "Cat", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+    var allServices = dogServices.Concat(catServices).GroupBy(s => s.Id).Select(g => g.First()).ToList();
+
+    var dogPackages = (packages ?? new List<Package>())
+                        .Where(p => string.Equals(p.PetType, "Dog", StringComparison.OrdinalIgnoreCase) || string.Equals(p.PetType, "Cat & Dog", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+    var catPackages = (packages ?? new List<Package>())
+                        .Where(p => string.Equals(p.PetType, "Cat", StringComparison.OrdinalIgnoreCase) || string.Equals(p.PetType, "Cat & Dog", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+    var allPackages = dogPackages.Concat(catPackages).GroupBy(p => p.Id).Select(g => g.First()).ToList();
+}
+
+
+<link rel="stylesheet" href="~/css/site.css" />
+
+<!-- Banner -->
+<section class="banner">
+    <div class="banner-content">
+        <h1>@Localizer["Our Pet Grooming Services"]</h1>
+        <p>@Localizer["Professional grooming services tailored to your pet's needs. We provide the best care for your furry friends."]</p>
+        <a href="#services" class="bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 px-8 rounded-full inline-block cta-button">@Localizer["View Services"]</a>
+    </div>
+</section>
+
+<!-- Search Form & Price Range Filter -->
+<form id="f" method="get" action="@Url.Action("Services","Home")">
+    <input name="name" type="search" value="@(ViewBag.Name ?? "")" />
+    <button type="submit">@Localizer["Search"]</button>
+</form>
+
+<form method="get" class="mb-4">
+    <div class="row g-2">
+        <!-- Min and Max Price Inputs -->
+        <div class="col-md-3">
+            <label for="minPrice" class="form-label">@Localizer["Min Price"]</label>
+            <input type="number" name="minPrice" id="minPrice" class="form-control" value="@ViewBag.MinPrice" step="0.01" />
+        </div>
+        <div class="col-md-3">
+            <label for="maxPrice" class="form-label">@Localizer["Max Price"]</label>
+            <input type="number" name="maxPrice" id="maxPrice" class="form-control" value="@ViewBag.MaxPrice" step="0.01" max="999.98" />
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">@Localizer["Filter"]</button>
+        </div>
+    </div>
+</form>
+@if (ViewBag.MaxPriceWarning != null)
+{
+    <div class="alert alert-warning mt-2">
+        @ViewBag.MaxPriceWarning
+    </div>
+}
+
+<div id="target">
+    <!-- Pet Type Tabs -->
+    <section id="services">
+        <div class="tabs-center-outer">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">@Localizer["Choose Your Pet Type"]</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    @Localizer["We offer specialized grooming services for dogs and cats. Select your pet type to see our tailored services."]
+                </p>
+            </div>
+
+            <div class="tabs-center">
+                <button class="tab-button active" data-tab="All">@Localizer["All"]</button>
+                <button class="tab-button" data-tab="Dog">@Localizer["Dog"]</button>
+                <button class="tab-button" data-tab="Cat">@Localizer["Cat"]</button>
+            </div>
+
+            <script>
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                        this.classList.add('active');
+                        const key = (this.dataset.tab || '').trim().toLowerCase();
+                        if (key === 'dog') {
+                            document.getElementById('dogs-tab')?.classList.add('active');
+                        } else if (key === 'cat') {
+                            document.getElementById('cats-tab')?.classList.add('active');
+                        } else {
+                            document.getElementById('all-tab')?.classList.add('active');
+                        }
+                    });
+                });
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('all-tab')?.classList.add('active');
+                });
+            </script>
+
+            <!-- All (combined, deduplicated) -->
+            <div id="all-tab" class="tab-content">
+                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">@Localizer["All"]@Localizer["Services"] & @Localizer["Packages"]</h3>
+                <div class="service-cards-row">
+                    @Html.Partial("_ServiceCardList", allServices)
+                    @Html.Partial("_PackageCardList", allPackages)
+                </div>
+            </div>
+
+            <!-- Dog Grooming Tab -->
+            <div id="dogs-tab" class="tab-content">
+                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">@Localizer["Dog"] @Localizer["Grooming Services"]</h3>
+                <div class="service-cards-row">
+                    @Html.Partial("_ServiceCardList", dogServices)
+                    @Html.Partial("_PackageCardList", dogPackages)
+                </div>
+            </div>
+
+            <!-- Cat Grooming Tab -->
+            <div id="cats-tab" class="tab-content">
+                <h3 class="text-2xl font-bold text-gray-800 mb-8 text-center">@Localizer["Cat"] @Localizer["Grooming Services"]</h3>
+                <div class="service-cards-row">
+                    @Html.Partial("_ServiceCardList", catServices)
+                    @Html.Partial("_PackageCardList", catPackages)
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Additional Services -->
+<section class="additional-services-section">
+    <div class="additional-services-header">
+        <h3 class="additional-services-title">@Localizer["Additional Services"]</h3>
+        <p class="additional-services-desc">@Localizer["Enhance your pet's grooming experience with these add-on services."]</p>
+    </div>
+    <div class="additional-services-grid">
+        @{
+            var additional = Model?.Where(s => string.Equals(s.PetType, "Cat & Dog", StringComparison.OrdinalIgnoreCase)).ToList() ?? new List<ServiceOption>();
+            foreach (var a in additional)
+            {
+                // var first = (a.ImageURL != null && a.ImageURL.Any()) ? a.ImageURL.FirstOrDefault() : null;
+                <a href="/Home/Book?serviceId=@a.Id" class="additional-service-link" tabindex="0">
+                    <div class="additional-service-card">
+                        <div class="addition-icon-wrapper">
+                        </div>
+                        <h3 class="additional-service-title">@Localizer[@a.Name]</h3>
+                        <p class="additional-service-desc">@Localizer[@a.Description]</p>
+                        <p class="additional-service-price">RM @a.Price</p>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+</section>
+
+@section foot {
+<script>
+    // re-run carousel wiring when partials are injected by AJAX (if you use unobtrusive ajax).
+    // app.js already wires on DOMContentLoaded; expose and call a small init function here for safety.
+    if (window.initServiceCards == null) {
+        window.initServiceCards = function () {
+            document.querySelectorAll('.service-card').forEach(card => {
+                // minimal: ensure arrows exist and click handlers are bound
+                if (!card.querySelector('.card-arrow.left')) {
+                    const img = card.querySelector('.card-main-img') || card.querySelector('img');
+                    if (img && img.parentElement) {
+                        const left = document.createElement('button'); left.type='button'; left.className='card-arrow left'; left.textContent='◀';
+                        const right = document.createElement('button'); right.type='button'; right.className='card-arrow right'; right.textContent='▶';
+                        img.parentElement.style.position = img.parentElement.style.position || 'relative';
+                        left.style.position = right.style.position = 'absolute';
+                        left.style.left = '8px'; right.style.right = '8px';
+                        left.style.top = right.style.top = '50%';
+                        img.parentElement.appendChild(left); img.parentElement.appendChild(right);
+                        // basic handlers already exist in app.js so they will be applied on next DOMContentLoaded; keep this minimal
+                    }
+                }
+            });
+        };
+        document.addEventListener('DOMContentLoaded', window.initServiceCards);
+    }
+</script>
+}

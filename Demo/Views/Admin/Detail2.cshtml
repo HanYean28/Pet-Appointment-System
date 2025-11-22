@@ -1,0 +1,119 @@
+﻿@model Package
+
+@{
+    ViewBag.Title = "Package Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string ResolveImage(string img)
+    {
+        if (string.IsNullOrWhiteSpace(img)) return Url.Content("~/images/noimage.png");
+        if (img.StartsWith("http", StringComparison.OrdinalIgnoreCase) || img.StartsWith("/")) return img;
+        return Url.Content($"~/images/Package_Images/{img}");
+    }
+
+    var images = Model.ImageURL ?? new List<string>();
+    var resolved = images.Select(i => ResolveImage(i)).ToList();
+    var mainSrc = resolved.FirstOrDefault() ?? Url.Content("~/images/noimage.png");
+}
+<section class="admin-section">
+    <h1 class="section-title">Package Detail</h1>
+    <div class="service-image" style="text-align:center;margin-bottom:1.5rem;position:relative;max-width:680px;margin-left:auto;margin-right:auto;">
+        <button type="button" class="gallery-arrow left" aria-label="Previous" style="position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:3;">◀</button>
+
+        <img id="mainGalleryImagePkg" class="standard-image" src="@mainSrc" alt="@Model.Name" />
+
+        <button type="button" class="gallery-arrow right" aria-label="Next" style="position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:3;">▶</button>
+
+        @if (resolved.Any())
+        {
+            <div id="thumbsPkg" style="display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap;">
+                @for (int i = 0; i < resolved.Count; i++)
+                {
+                    <img class="thumb-pkg" data-index="@i" src="@resolved[i]" style="width:80px;height:56px;object-fit:cover;border-radius:4px;cursor:pointer;border:2px solid transparent" />
+                }
+            </div>
+        }
+    </div>
+
+<table class="table detail">
+    <tr>
+        <th>Id</th>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>@Model.Description</td>
+    </tr>
+    <tr>
+        <th>Features</th>
+            <td>
+                @{
+                    var descItems = (Model.Features != null && Model.Features.Any())
+                    ? Model.Features.AsEnumerable()
+                    : (!string.IsNullOrWhiteSpace(Model.Description)
+                    ? Model.Description
+                    .Split(new[] { "\r\n", "\n", ";" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    : Enumerable.Empty<string>());
+                }
+
+                @if (descItems.Any())
+                {
+                    <ul class="service-card-features">
+                        @foreach (var item in descItems)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p style="font-size:1rem;color:#23272f;margin-bottom:1rem;">@Model.Description</p>
+                }
+            </td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td>@Model.Price</td>
+    </tr>
+        <tr>
+            <th>Pet Type</th>
+            <td>@Model.PetType</td>
+        </tr>
+</table>
+<p>
+    <button class="btn" data-get="/Admin/PackageMaintenance/">Go back</button>
+</p>
+</section>
+
+@section foot {
+<script>
+(function () {
+    const images = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(resolved));
+    const main = document.getElementById('mainGalleryImagePkg');
+    let idx = 0;
+    function setIndex(i) {
+        if (!images || images.length === 0) return;
+        idx = (i + images.length) % images.length;
+        if (main) main.src = images[idx];
+        document.querySelectorAll('#thumbsPkg .thumb-pkg').forEach(t => t.style.borderColor = 'transparent');
+        const t = document.querySelector('#thumbsPkg .thumb-pkg[data-index="' + idx + '"]');
+        if (t) t.style.borderColor = '#3b8beb';
+    }
+    document.querySelectorAll('#thumbsPkg .thumb-pkg').forEach(t => t.addEventListener('click', function () { setIndex(parseInt(this.dataset.index)); }));
+    document.querySelectorAll('.gallery-arrow.left').forEach(b => b.addEventListener('click', () => setIndex(idx - 1)));
+    document.querySelectorAll('.gallery-arrow.right').forEach(b => b.addEventListener('click', () => setIndex(idx + 1)));
+    setIndex(0);
+})();
+</script>
+<style>
+.gallery-arrow { background: rgba(255,255,255,0.85); border: none; padding:8px 10px; cursor:pointer; border-radius:4px; box-shadow:0 1px 6px rgba(0,0,0,0.08); }
+.gallery-arrow:hover { background: #fff; }
+.thumb-pkg:hover { transform: scale(1.03); }
+</style>
+}
+

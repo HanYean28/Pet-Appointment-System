@@ -1,0 +1,172 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Package>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    string[] fields = [@Localizer["Name"], @Localizer["Price"], Localizer["Pet Type"]];
+
+    string ResolveImage(string img)
+    {
+        if (string.IsNullOrWhiteSpace(img)) return "/images/noimage.png";
+        if (img.StartsWith("http", StringComparison.OrdinalIgnoreCase) || img.StartsWith("/")) return img;
+        return Url.Content($"~/images/Service_Images/{img}");
+    }
+}
+
+ <style >
+    /* Make table adapt to content but keep specific columns constrained so action buttons remain visible */
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+    }
+
+    .admin-table th, .admin-table td {
+        padding: .5rem .75rem;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: top;
+    }
+
+    .col-name {
+        width: 35%;
+        white-space: normal;
+        word-break: break-word;
+    }
+    /* .col-desc { width:30%; max-width:40ch; white-space:normal; word-break:break-word; }
+        .col-features { width:22%; max-width:40ch; white-space:normal; word-break:break-word; } */
+    .col-price {
+        width: 20%;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .col-pet {
+        width: 20%;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .col-img {
+        width: 20%;
+        text-align: center;
+    }
+
+    .col-actions {
+        width: 120px;
+        white-space: nowrap;
+        text-align: right;
+    }
+
+    .admin-table img {
+        max-width: 60px;
+        max-height: 60px;
+        object-fit: cover;
+        display: inline-block;
+        border-radius: 4px;
+    }
+
+    /* Small button spacing */
+    .admin-table .btn {
+        margin-left: .35rem;
+        margin-right: .35rem;
+        padding: .35rem .6rem;
+        font-size: .9rem;
+    }
+    /* Responsive: let table scroll horizontally on very small screens */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+</style>
+
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+
+<p>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of @Model.PageCount
+</p>
+
+<div class="table-wrapper">
+    <table class="table admin-table">
+        <tr>
+            @foreach (var f in fields)
+            {
+                string d = "asc";
+                string c = "";
+                string arrow = "";
+
+                if (f == ViewBag.Sort)
+                {
+                    d = ViewBag.Dir == "des" ? "asc" : "des";
+                    c = ViewBag.Dir;
+                    arrow = ViewBag.Dir == "asc" ? "▲" : "▼";
+                }
+
+                <th>@f @arrow</th>
+            }
+            <th class="col-img">@Localizer["Images"]</th>
+            <th class="col-actions">@Localizer["Actions"]</th>
+        </tr>
+
+        @foreach (var s in Model ?? Enumerable.Empty<Package>())
+        {
+            <tr>
+                <td class="col-name">@Localizer[@s.Name]</td>
+                @* <td class="col-desc">@s.Description</td>
+                <td class="col-features">
+                    @if (s.Features == null)
+                    {
+                        <text>NULL</text>
+                    }
+                    else if (s.Features is IEnumerable<string> lf && lf.Any())
+                    {
+                        var firstItem = lf.FirstOrDefault();
+                        <ul style="margin:0;padding-left:1rem;">
+                            <li>@firstItem</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <text>No Features</text>
+                    }
+                </td> *@
+                <td class="col-price">@(s.Price)</td>
+                <td class="col-pet">@Localizer[@s.PetType]</td>
+                <td class="col-img">
+                    @{
+                        var first = (s.ImageURL != null && s.ImageURL.Any()) ? s.ImageURL.FirstOrDefault() : null;
+                        <img src="@(ResolveImage(first))" alt="@s.Name" />
+                    }
+                </td>
+                <td class="col-actions">
+                    <button type="button" class="btn" data-get="/Admin/Detail2/@s.Id">@Localizer["Details"]</button>
+                    <button type="button" class="btn" data-get="/Admin/Update2/@s.Id">@Localizer["Update"]</button>
+                    <button type="button" class="btn" data-post="/Admin/Delete2/@s.Id">@Localizer["Delete"]</button>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = Localizer["First"];
+    options.LinkToLastPageFormat = Localizer["Last"];
+    options.LinkToPreviousPageFormat = Localizer["Previous"];
+    options.LinkToNextPageFormat = Localizer["Next"];
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+Model,
+p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

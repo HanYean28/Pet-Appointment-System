@@ -1,0 +1,350 @@
+﻿@model PawfectGrooming.Models.Payment
+@using Microsoft.AspNetCore.Http
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Make a Payment";
+
+    // Session voucher info
+    var appliedCode = ViewContext.HttpContext.Session.GetString("VoucherCode");
+    var appliedAmountStr = ViewContext.HttpContext.Session.GetString("VoucherAmount");
+    var currentUrl = ViewContext.HttpContext.Request.Path + ViewContext.HttpContext.Request.QueryString;
+
+    // Prices for summary
+    decimal baseAmount = 0m;
+    try { if (ViewBag.Price != null) baseAmount = Convert.ToDecimal(ViewBag.Price, CultureInfo.InvariantCulture); } catch { baseAmount = 0m; }
+
+    // Payment type flags
+    bool isDeposit = string.Equals(Model?.PaymentType, "Deposit", StringComparison.OrdinalIgnoreCase);
+    bool allowVoucher = string.Equals(Model?.PaymentType, "Full Payment", StringComparison.OrdinalIgnoreCase);
+
+    // Voucher applies ONLY to Full Payment (server-side)
+    decimal discount = 0m;
+    if (allowVoucher && !string.IsNullOrWhiteSpace(appliedAmountStr))
+    {
+        decimal.TryParse(appliedAmountStr, NumberStyles.Any, CultureInfo.InvariantCulture, out discount);
+    }
+    if (discount < 0) discount = 0;
+    if (discount > baseAmount) discount = baseAmount;
+
+    // Totals
+    const decimal DepositFixed = 20.00m;
+    decimal remainingAfterDeposit = isDeposit ? Math.Max(0, baseAmount - DepositFixed) : 0m;
+    decimal total = isDeposit ? DepositFixed : (baseAmount - discount);
+
+}
+
+<div class="pg-scope">
+    <div class="pg-container">
+        <div class="pg-header">
+            <div>
+                <h1 class="pg-title">Pawfect Checkout</h1>
+                <div class="pg-subtitle">Review your booking and choose your payment method.</div>
+            </div>
+        </div>
+
+        @if (Model == null)
+        {
+            <div class="pg-card pg-alert error">Error: Payment model was not provided.</div>
+        }
+        else
+        {
+            @using (Html.BeginForm("SelectMethod", "Payment", FormMethod.Post, new { id = "pg-form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.HiddenFor(m => m.BookingId)
+                <input type="hidden" name="returnUrl" value="@currentUrl" />
+
+                <div class="pg-grid">
+                    <!-- LEFT -->
+                    <div class="pg-left">
+                        <!-- Item -->
+                        <div class="pg-card">
+                            <div class="pg-card-header">Items</div>
+                            <div class="pg-card-body">
+                                <div class="pg-item">
+                                    <div class="pg-thumb" aria-hidden="true">🐾</div>
+                                    <div class="pg-item-info">
+                                        <div class="pg-item-title">@ViewBag.PackageName</div>
+                                        <div class="pg-item-meta">Appointment: @ViewBag.AppointmentTime</div>
+                                    </div>
+                                    <div class="pg-item-price">RM @baseAmount.ToString("0.00")</div>
+                                </div>
+
+                                <div class="pg-divider"></div>
+
+                                <div class="pg-details">
+                                    <div class="pg-detail-tile">
+                                        <div class="pg-detail-label">Booking ID</div>
+                                        <div class="pg-detail-value">@Model.BookingId</div>
+                                    </div>
+                                    <div class="pg-detail-tile">
+                                        <div class="pg-detail-label">Service</div>
+                                        <div class="pg-detail-value">Grooming</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment options -->
+                        <div class="pg-card">
+                            <div class="pg-card-header">Payment options</div>
+                            <div class="pg-card-body">
+                                <div class="pg-field">
+                                    @Html.LabelFor(m => m.PaymentMethod, new { @class = "pg-label" })
+                                    @Html.DropDownListFor(
+                                    m => m.PaymentMethod,
+                                                        new SelectList(new[] { "Credit Card", "FPX", "E-Wallet" }),
+                                                        "Select Payment Method",
+                                                        new { @class = "pg-input", required = "required", id = "PaymentMethod" }
+                                                        )
+                            @Html.ValidationMessageFor(m => m.PaymentMethod, "", new { @class = "text-danger small d-block mt-1" })
+                        </div>
+
+                        <div class="pg-field">
+                            @Html.LabelFor(m => m.PaymentType, new { @class = "pg-label" })
+                            @Html.DropDownListFor(
+                                                        m => m.PaymentType,
+                                                        new SelectList(new[] { "Deposit", "Full Payment" }),
+                                                        "Select Payment Type",
+                                                        new { @class = "pg-input", required = "required", id = "PaymentType" }
+                                                        )
+                            @Html.ValidationMessageFor(m => m.PaymentType, "", new { @class = "text-danger small d-block mt-1" })
+                        </div>
+                        <div class="pg-help">Note: Vouchers apply to Full Payment only.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="pg-right">
+                <div class="pg-card pg-sticky">
+                    <div class="pg-card-header">Order summary</div>
+                    <div class="pg-card-body" id="order-summary"
+                         data-base="@baseAmount.ToString(CultureInfo.InvariantCulture)"
+                         data-discount="@discount.ToString(CultureInfo.InvariantCulture)">
+
+                        <div class="pg-line">
+                            <span>Base</span>
+                            <span id="summary-base">RM @baseAmount.ToString("0.00")</span>
+                        </div>
+
+                        <!-- Discount hidden on Deposit -->
+                        <div class="pg-line @(isDeposit ? "pg-hidden" : "")" id="discount-row">
+                            <span>Discount</span>
+                            <span id="summary-discount" class="pg-text-success">- RM @discount.ToString("0.00")</span>
+                        </div>
+
+                        <!-- Deposit-specific rows -->
+                        <div class="pg-line @(isDeposit ? "" : "pg-hidden")" id="deposit-row">
+                            <span>Deposit</span>
+                            <span id="summary-deposit">RM 20.00</span>
+                        </div>
+                        <div class="pg-line @(isDeposit ? "" : "pg-hidden")" id="remaining-row">
+                            <span>Remaining after deposit</span>
+                            <span id="summary-remaining">RM @remainingAfterDeposit.ToString("0.00")</span>
+                        </div>
+                        <div id="deposit-note">
+                            You'll pay RM 20.00 now. The remaining amount is due on the appointment day.
+                        </div>
+
+                        <div class="pg-divider"></div>
+                        <div class="pg-line pg-total">
+                            <span>Total</span>
+                            <span id="summary-total">RM @total.ToString("0.00")</span>
+                        </div>
+
+                        <!-- Voucher (client + server controlled visibility) -->
+                        <div id="voucher-section" class="pg-voucher @(allowVoucher ? "" : "pg-hidden")">
+                            <div class="pg-subsection-title">Use Voucher</div>
+                                    @if (!string.IsNullOrEmpty(appliedCode))
+                                    {
+                                        <div class="pg-alert success pg-flex-between">
+                                            <div>
+                                                Applied voucher: <strong>@appliedCode</strong>
+                                                @if (discount > 0)
+                                                {
+                                                    <span> (-RM @discount.ToString("0.00"))</span>
+                                                }
+                                            </div>
+                                            <button type="submit"
+                                                    class="pg-btn ghost danger"
+                                                    formaction="@Url.Action("RemoveVoucher", "Payment")"
+                                                    formmethod="post"
+                                                    formnovalidate>
+                                                Remove
+                                            </button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="pg-voucher-row">
+                                            <div class="pg-field">
+                                                <label for="voucherCode" class="pg-label">Voucher code</label>
+                                                <input type="text" id="voucherCode" name="code" class="pg-input" placeholder="Enter voucher code" />
+                                            </div>
+                                            <div class="pg-voucher-apply">
+                                                <button type="submit"
+                                                        class="pg-btn secondary w-100"
+                                                        formaction="@Url.Action("ApplyVoucher", "Payment")"
+                                                        formmethod="post"
+                                                        formnovalidate>
+                                                    Apply
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="pg-card-footer">
+                                <button type="submit" class="pg-btn primary w-100">Next</button>
+                                <div class="pg-secure">Your payment is protected by SSL.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const paymentType = document.getElementById('PaymentType');
+            const paymentMethod = document.getElementById('PaymentMethod');
+            const voucherSection = document.getElementById('voucher-section');
+
+            const summary = document.getElementById('order-summary');
+            const baseSpan = document.getElementById('summary-base');
+            const discountRow = document.getElementById('discount-row');
+            const discountSpan = document.getElementById('summary-discount');
+            const totalSpan = document.getElementById('summary-total');
+
+            const depositNote = document.getElementById('deposit-note');
+            const depositRow = document.getElementById('deposit-row');
+            const remainingRow = document.getElementById('remaining-row');
+            const summaryDeposit = document.getElementById('summary-deposit');
+            const summaryRemaining = document.getElementById('summary-remaining');
+
+            const codeInput = document.getElementById('voucherCode');
+            const applyBtn = document.querySelector('button[formaction*="ApplyVoucher"]');
+            const removeBtn = document.querySelector('button[formaction*="RemoveVoucher"]');
+
+            const baseAmount = parseFloat(summary && summary.dataset && summary.dataset.base ? summary.dataset.base : '0');
+            const fullDiscount = parseFloat(summary && summary.dataset && summary.dataset.discount ? summary.dataset.discount : '0');
+            const DEPOSIT_AMOUNT = 20.00;
+
+            function normalize(v) {
+                return (v || '').toString().trim().toLowerCase();
+            }
+
+            function formatRM(n) {
+                const v = Number.isFinite(n) ? n : 0;
+                return 'RM ' + v.toFixed(2);
+            }
+
+            function show(el, yes) {
+                if (!el) return;
+                el.classList.toggle('pg-hidden', !yes);
+                // also set aria-hidden for accessibility
+                el.setAttribute('aria-hidden', (!yes).toString());
+            }
+
+            function updateSummary() {
+                const type = paymentType ? paymentType.value : '';
+                let discount = 0;
+                let total = 0;
+
+                if (normalize(type) === 'full payment') {
+                    discount = Math.min(Math.max(fullDiscount || 0, 0), baseAmount);
+                    total = Math.max(0, baseAmount - discount);
+
+                    show(discountRow, true);
+                    show(depositRow, false);
+                    show(remainingRow, false);
+                    show(depositNote, false);
+
+                } else if (normalize(type) === 'deposit') {
+                    discount = 0;
+                    total = DEPOSIT_AMOUNT;
+
+                    const remaining = Math.max(0, baseAmount - DEPOSIT_AMOUNT);
+                    if (summaryDeposit) summaryDeposit.textContent = formatRM(DEPOSIT_AMOUNT);
+                    if (summaryRemaining) summaryRemaining.textContent = formatRM(remaining);
+
+                    show(discountRow, false);
+                    show(depositRow, true);
+                    show(remainingRow, true);
+                    show(depositNote, true);
+                } else {
+                    discount = 0;
+                    total = Math.max(0, baseAmount);
+                    show(discountRow, false);
+                    show(depositRow, false);
+                    show(remainingRow, false);
+                    show(depositNote, false);
+                }
+
+                if (baseSpan) baseSpan.textContent = formatRM(baseAmount);
+                if (discountSpan) discountSpan.textContent = '- ' + formatRM(discount);
+                if (totalSpan) totalSpan.textContent = formatRM(total);
+            }
+
+            function syncVoucherVisibility() {
+                const isFull = paymentType && normalize(paymentType.value) === 'full payment';
+                const method = paymentMethod ? normalize(paymentMethod.value) : '';
+                const isFPX = method === 'fpx';
+
+                // ----- Block Deposit for FPX -----
+                if (paymentType) {
+                    for (let option of paymentType.options) {
+                        if (normalize(option.value) === 'deposit') {
+                            option.disabled = isFPX;
+
+                            // Add/remove tooltip text
+                            if (isFPX) {
+                                option.textContent = "Deposit (Not available for FPX)";
+                            } else {
+                                option.textContent = "Deposit";
+                            }
+                        }
+                    }
+
+                    // If Deposit was selected and FPX is chosen → switch to Full Payment
+                    if (isFPX && normalize(paymentType.value) === 'deposit') {
+                        paymentType.value = 'Full Payment';
+                    }
+                }
+                // ----------------------------------
+
+                // voucher allowed only when Full Payment
+                const allowVoucher = isFull;
+                if (voucherSection) {
+                    voucherSection.classList.toggle('pg-hidden', !allowVoucher);
+                    voucherSection.setAttribute('aria-hidden', (!allowVoucher).toString());
+                }
+
+                // disable inputs/buttons when vouchers are not allowed
+                if (codeInput) {
+                    codeInput.disabled = !allowVoucher;
+                    if (!allowVoucher) codeInput.value = '';
+                }
+                if (applyBtn) applyBtn.disabled = !allowVoucher;
+                if (removeBtn) removeBtn.disabled = !allowVoucher;
+
+                updateSummary();
+            }
+
+            // attach listeners if elements exist
+            if (paymentType) paymentType.addEventListener('change', syncVoucherVisibility);
+            if (paymentMethod) paymentMethod.addEventListener('change', syncVoucherVisibility);
+
+            // initial sync on load
+            syncVoucherVisibility();
+        });
+    </script>
+}

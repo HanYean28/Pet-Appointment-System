@@ -1,0 +1,247 @@
+﻿@inject UserContext db
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@using Microsoft.AspNetCore.Authorization
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Pawfect Grooming</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/jpeg" href="@Url.Content("~/images/dogpfp.jpg")" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/pager.css">
+    <script src="https://kit.fontawesome.com/72f3a5c45b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>    @RenderSection("head", false)
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <script>
+            let inactivityTimer;
+
+            function autoLogout() {
+                alert("You have been logged out due to inactivity.");
+                window.location.href = '/Account/Logout';
+            }
+
+            function resetInactivityTimer() {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(autoLogout, 5 * 60 * 1000); // 5 minutes
+            }
+
+            window.onload = resetInactivityTimer;
+            document.onmousemove = resetInactivityTimer;
+            document.onkeydown = resetInactivityTimer;
+            document.onclick = resetInactivityTimer;
+            document.onscroll = resetInactivityTimer;
+        </script>
+    }
+
+    @if (TempData["Info"] !=null)
+    {
+    <div class="info">@Localizer[TempData["Info"].ToString()]</div>
+    }
+    @if (TempData["Error"] !=null)
+    {
+        <div class="error">@Localizer[TempData["Error"].ToString()]</div>
+    }
+    <header class="navbar">
+        <div class="container navbar__container">
+            <div class="navbar__logo">
+                <img src="@Url.Content("~/images/dogpfp.jpg")" alt="Logo" class="navbar__icon" />
+                <span class="navbar__brand">Pawfect Grooming</span>
+            </div>
+            <nav class="navbar__nav">
+                <a href="/" class="@(ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">@Localizer["Home"]</a>
+                <a href="/Home/Services" class="@(ViewContext.RouteData.Values["action"].ToString() == "Services" ? "active" : "")">@Localizer["Services"]</a>
+                <a href="/Home/AppointmentsList" class="@(ViewContext.RouteData.Values["action"].ToString() == "AppointmentsList" ? "active" : "")">@Localizer["Appointments"]</a>
+                @* Show Status link to Admins and Members *@
+                @if (User.Identity != null && User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Member")))
+                {
+                    <a href="/Product/Status" class="@(ViewContext.RouteData.Values["action"].ToString() == "Status" ? "active" : "")">Status</a>
+                }
+                <a href="/Home/Contact" class="@(ViewContext.RouteData.Values["action"].ToString() == "Contact" ? "active" : "")">@Localizer["Contact"]</a>
+                <a href="/FAQ/Chatbox" class="@(ViewContext.RouteData.Values["action"].ToString() == "Chatbox" ? "active" : "")">@Localizer["FAQs"]</a>
+
+                @if (!User.Identity!.IsAuthenticated)
+                {
+                    <a href="/Account/Login" class="@(ViewContext.RouteData.Values["action"].ToString() == "Login" ? "active" : "")">@Localizer["Login"]</a>
+                }
+                @if (User.Identity!.IsAuthenticated)
+                {
+                    <a href="/Payment/History" class="@(ViewContext.RouteData.Values["action"].ToString() == "History" ? "active" : "")">@Localizer["Payment History"]</a>
+                }
+              
+@*                 @if (User.Identity!.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a href="/Admin/CategoryMaintenance" class="@(ViewContext.RouteData.Values["action"].ToString() == "CategoryMaintenance" ? "active" : "")">Category Maintenance</a>
+                    <a href="/Admin/ProductMaintenance" class="@(ViewContext.RouteData.Values["action"].ToString() == "ProductMaintenance" ? "active" : "")">Product Maintenance</a>
+                } *@
+            </nav>
+            <div>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    // Get user record (works for both Admin and Member)
+                    var user = db.Users.Find(User.Identity.Name);
+                    if (user != null)
+                    {
+                        // get member & admin photo (if not, fallback to default)
+                        var member = db.Members.Find(User.Identity.Name);
+                        var admin = db.Admins.Find(User.Identity.Name);
+                        var photoURL = member?.PhotoURL ?? admin?.PhotoURL ?? "default.png";// Use a default image if not a member or admin
+                        <div class="dropdown">
+                            <button class="dropbtn">
+                                <div class="profile-section">
+                                    <div class="profile-info">
+                                        <p class="user-name">@user.Name</p>
+                                        <p class="user-role">@Localizer[@user.Role]</p>
+                                    </div>
+                                    <img class="profile-image" src="/images/User_Images/@photoURL">
+                                </div>
+                            </button>
+                            <div class="dropdown-content">
+                                @if (user.Role == "Member" || user.Role == "Admin")
+                                {
+                                    //User Profile
+                                    <a href="/Account/ViewProfile">@Localizer["View Profile"]</a>
+                                    <a href="/Account/UpdateProfile">@Localizer["Update Profile"]</a>
+                                    <a href="/Account/UpdatePassword">@Localizer["Update Password"]</a>
+                                    <a href="/Account/LoginHistory">@Localizer["Login History"]</a>
+
+                                }
+                                @if (user.Role == "Admin")
+                                {
+                                    <a href="/Admin/MemberOverview">@Localizer["User Management"]</a>
+                                    <a href="/Admin/AdminOverview">@Localizer["Admin Management"]</a>
+                                    <a href="/Admin/PackageMaintenance">@Localizer["Package Maintenance"]</a>
+                                    <a href="/Admin/ServiceMaintenance">@Localizer["Service Maintenance"]</a>
+                                    <a href="/Admin/AppointmentMaintenance">@Localizer["Appointment Maintenance"]</a>
+                                }
+                                @if (user.Role == "Member")
+                                {
+									<a href="/Account/MyVouchers">@Localizer["My Vouchers"]</a>
+                                    <a asp-controller="Pet" asp-action="ProfilePet">@Localizer["Pet Profile"]</a>
+                                    <a href="/Payment/History">@Localizer["Payment History"]</a>
+
+                                }
+                                @if (user.Role != null)
+                                {
+                                    <a href="/Account/Logout" style="color: red;">@Localizer["Logout"]</a>
+
+                                }
+
+                            </div>
+                        </div>
+                    }
+                }
+
+
+            </div>
+        </div>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__container">
+            <div>
+                <!-- For debug purpose(language)-->
+                <!--<p>Current UI Culture: @System.Globalization.CultureInfo.CurrentUICulture.Name</p>-->
+                <div class="footer__brand">🐾 Pawfect Grooming</div>
+                <div class="footer__desc">@Localizer["TagLine"]</div>
+                <div class="footer__social">
+                    <a href="#"><i class="fab fa-facebook-square"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div>
+                <!-- Quick Links -->
+                <div class="footer__title">@Localizer["Quick Links"]</div>
+                <div><a href="/">@Localizer["Home"]</a></div>
+                <div><a href="/Home/Services">@Localizer["Services"]</a></div>
+                <div><a href="/Home/AppointmentsList">@Localizer["Appointments"]</a></div>
+                <div><a href="/Home/Contact">@Localizer["Contact"]</a></div>
+            </div>
+            <div>
+                <!-- Contact Us -->
+                <div class="footer__title">@Localizer["Contact Us"]</div>
+                <div>📍 102-A,B,C, Jalan Jejaka, Maluri, 55100 Cheras, Wilayah Persekutuan Kuala Lumpur</div>
+                <div>📞 +60 12-345 6789</div>
+                <a href="mailto:info@pawfectgrooming.com">✉️ info@pawfectgrooming.com</a>
+            </div>
+            <div>
+                <!-- Opening Hours -->
+                <div class="footer__title">@Localizer["Opening Hours"]</div>
+                <div>@Localizer["Monday"] – @Localizer["Saturday"]: 9am – 6pm</div>
+                <div>@Localizer["Sunday"] : @Localizer["Closed"]</div>
+            </div>
+            <div>
+                <div class="footer__title">@Localizer["Newsletter"]</div>
+                <div class="footer__desc">@Localizer["Newsletter Description"]</div>
+                <form class="footer__newsletter">
+                    <input type="email" placeholder="@Localizer["Your Email"]" />
+                    <button type="submit">
+                        <i class="fa-solid fa-arrow-right" style="color: white;"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="footer__language-selector">
+                <label for="cultureSelect">🌏 @Localizer["Language"]:</label>
+                <form method="post" asp-controller="Account" asp-action="SetLanguage" style="display:inline;">
+                    @{
+                        var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                    }
+                    <select id="cultureSelect" name="culture" onchange="this.form.submit()">
+                        @if (currentCulture == "zh-CN")
+                        {
+                            <option value="zh-CN" selected>中文</option>
+                            <option value="en-US">English</option>
+                            <option value="ms-MY">Malay</option>
+                        }
+                        else if (currentCulture == "ms-MY")
+                        {
+                            <option value="ms-MY" selected>Malay</option>
+                            <option value="zh-CN" >中文</option>
+                            <option value="en-US">English</option>
+                        }
+                        else
+                        {
+                            <option value="en-US" selected>English</option>
+                            <option value="zh-CN">中文</option>
+                            <option value="ms-MY">Malay</option>
+                        }
+                    </select>
+                </form>
+            </div>
+            <div>
+                <div class="footer__title">@Localizer["Temporary Login"]</div>
+                <a href="/Account/TemporaryLogin">Temporary Login (1-hour test account)</a>
+            </div>
+            
+        </div>
+        <!-- Copyright -->
+        <div class="footer__copyright">
+            © @DateTime.Now.Year Pawfect Grooming. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/js/app.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    @RenderSection("foot", false)
+
+</body>
+</html>

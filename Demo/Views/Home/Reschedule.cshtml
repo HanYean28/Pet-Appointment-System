@@ -1,0 +1,42 @@
+@model PawfectGrooming.Models.Booking
+
+@{
+    ViewBag.Title = "Reschedule Appointment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string min = DateTime.Today.ToString("yyyy-MM-dd");//Set min limit cannot pick date from past
+    string max = DateTime.Today.AddMonths(12).ToString("yyyy-MM-dd");//Set max limit for date picker
+}
+
+<h2>Reschedule Appointment</h2>
+
+<form asp-action="Reschedule" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserEmail"/>
+
+    <div class="form-group">
+        <label for="Date">New Date</label>
+        <input type="date" name="Date"
+               value="@(Model.Date != DateTime.MinValue ? Model.Date.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))"
+               min="@min" max="@max" required class="form-control" />
+    </div>
+
+    @{
+        var timeSlots = new[] { "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+        "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM" };
+        var selectedTime = Model.Time as string;
+    }
+    <div class="form-group">
+        <label for="Time">New Time</label>
+        <select asp-for="Time" class="form-control" required>
+            @foreach (var time in timeSlots)
+            {
+                <option value="@time" selected="@(selectedTime == time ? "selected" : null)">@time</option>
+            }
+        </select>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="AppointmentsList" class="btn btn-secondary">Back</a>
+</form>

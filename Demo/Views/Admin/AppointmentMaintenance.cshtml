@@ -1,0 +1,292 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Appointment Maintenance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="admin-section">
+    <h1 class="section-title">@Localizer["Appointment Maintenance"]</h1>
+
+    <form data-ajax="true"
+          data-ajax-update="#target"
+          data-ajax-loading="#loader"
+          id="f">
+        @Html.TextBox("email", ViewBag.Email as string,
+        new { type = "search", autofocus = "", data_trim = "", placeholder = "Search by email..." })
+        <button>@Localizer["Search"]</button>
+        <img src="/images/loader.gif" id="loader" style="display: none" />
+
+        <!-- Hidden fields to maintain sort state (default Date desc) -->
+        @Html.Hidden("sort", ViewBag.Sort as string ?? "Date")
+        @Html.Hidden("dir", ViewBag.Dir as string ?? "desc")
+    </form>
+
+    <div class="filter-controls">
+        <form data-ajax="true"
+              data-ajax-update="#target"
+              data-ajax-loading="#loader"
+              id="filterForm">
+            <div class="filter-status-row" style="display:flex;align-items:center;gap:1rem;background:#f8f9fa;padding:0.75rem 1rem;border-radius:8px;margin-bottom:0.5rem;">
+                <label for="status" style="margin-bottom:0; margin-right:0.5rem;">@Localizer["Filter by Status:"]</label>
+                @Html.DropDownList("status", ViewBag.StatusOptions as IEnumerable<SelectListItem>, new { @class = "form-control", style = "min-width:150px; margin-right:1rem;" })
+            </div>
+            <div class="filter-actions-row" style="display:flex;gap:1rem;">
+                <button type="submit" class="btn btn-primary">@Localizer["Apply Filters"]</button>
+                <button type="button" class="btn btn-secondary" onclick="clearFilters()">@Localizer["Clear"]</button>
+            </div>
+            @Html.Hidden("email", ViewBag.Email as string)
+            @Html.Hidden("sort", ViewBag.Sort as string ?? "Date")
+            @Html.Hidden("dir", ViewBag.Dir as string ?? "desc")
+        </form>
+    </div>
+
+    <div class="action-buttons" style="margin-bottom:1rem;">
+        <a href="/Admin/SaleReports" class="bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 px-8 rounded-full inline-block cta-button" style="display:inline-flex;align-items:center;gap:0.5rem;">
+            <span>📊</span> @Localizer["Sales Report"]
+        </a>
+    </div>
+
+    <div id="target">
+        <partial name="_AppointmentList" />
+    </div>
+</section>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#email').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                // Update the hidden email field in filter form to maintain sync
+                $('#filterForm input[name="email"]').val($(e.target).val());
+                updateUrl();
+                $(e.target.form).submit();
+            }, 500);
+        });
+
+        $('#status, #showAll').on('change', function() {
+            // Sync the email value between forms
+            const emailValue = $('#email').val();
+            $('#filterForm input[name="email"]').val(emailValue);
+            updateUrl();
+            $('#filterForm').submit();
+        });
+
+        function updateUrl() {
+            const params = new URLSearchParams();
+
+            const email = $('#email').val();
+            const status = $('#status').val();
+            const showAll = $('#showAll').is(':checked');
+            // Read sort & dir from hidden inputs (defaults are Date / desc)
+            const sort = $('input[name="sort"]').val() || 'Date';
+            const dir = $('input[name="dir"]').val() || 'desc';
+
+            if (email) params.set('email', email);
+            if (status) params.set('status', status);
+            if (showAll) params.set('showAll', 'true');
+            params.set('sort', sort);
+            params.set('dir', dir);
+
+            const newUrl = window.location.pathname + '?' + params.toString();
+            history.replaceState(null, null, newUrl);
+        }
+
+        function clearFilters() {
+            $('#email').val('');
+            $('#status').val('');
+            $('#showAll').prop('checked', false);
+            // reset hidden sort values back to default Date / desc
+            $('#filterForm input[name="email"]').val('');
+            $('input[name="sort"]').val('Date');
+            $('input[name="dir"]').val('desc');
+
+            updateUrl();
+            $('#f').submit();
+        }
+
+        function updateAppointmentStatus(appointmentId, newStatus) {
+            if (confirm('Are you sure you want to update the appointment status?')) {
+                $.ajax({
+                    url: '/Admin/UpdateAppointmentStatus',
+                    type: 'POST',
+                    data: {
+                        id: appointmentId,
+                        status: newStatus,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Status updated successfully!');
+                            // Maintain current filters and sorting when refreshing
+                            $('#filterForm').submit();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred while updating the status.');
+                    }
+                });
+            }
+        }
+
+        // Click-to-sort on table headers inside the partial.
+        // Headers will still toggle sort by updating the hidden inputs and submitting the filter form.
+        $('#target').on('click', 'th[data-sort], th.sortable-header, th[data-sort] a, th.sortable-header a', function (e) {
+            e.preventDefault();
+            var th = $(this).closest('th[data-sort]');
+            var raw = th.data('sort') || th.text().trim();
+
+            // mapping (case-insensitive) to server side sort keys
+            var map = {
+                'email': 'Email',
+                'date': 'Date',
+                'time': 'Time',
+                'pet': 'Pet',
+                'service': 'Service',
+                'package': 'Package',
+                'customer name': 'CustomerName',
+                'name': 'CustomerName'
+            };
+
+            var key = map[raw.toString().toLowerCase()] || raw;
+
+            var currentSort = $('input[name="sort"]').val() || 'Date';
+            var currentDir = $('input[name="dir"]').val() || 'desc';
+
+            // toggle direction when clicking same column, otherwise default to asc
+            var newDir = (currentSort === key && currentDir === 'asc') ? 'desc' : 'asc';
+
+            // set hidden inputs so the server receives them
+            $('input[name="sort"]').val(key);
+            $('input[name="dir"]').val(newDir);
+
+            // keep search text in sync
+            var emailValue = $('#email').val();
+            $('#filterForm input[name="email"]').val(emailValue);
+
+            // submit the filter form (AJAX or full submit depending on attributes)
+            $('#filterForm').submit();
+        });
+
+        // Ensure popstate reloads partials correctly
+        window.addEventListener('popstate', function(event) {
+            // re-submit the filter form to restore state (server will use querystring)
+            $('#filterForm').submit();
+        });
+    </script>
+    
+    <style>
+        /* Search bar styling */
+        #f {
+            margin-bottom: 1rem;
+        }
+        
+        #f input[type="search"] {
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            width: 300px;
+        }
+        
+        #f button {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        #f button:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Filter controls styling */
+        .filter-controls {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+        
+        .filter-group label {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: #495057;
+        }
+        
+        .filter-group input, .filter-group select {
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-completed { background-color: #d4edda; color: #155724; }
+
+        /* Sortable column headers */
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 20px;
+        }
+
+            .sortable-header:hover {
+                background-color: #f8f9fa;
+            }
+
+        .sort-indicator {
+            position: absolute;
+            right: 5px;
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .sort-asc .sort-indicator::after {
+            content: "▲";
+        }
+
+        .sort-desc .sort-indicator::after {
+            content: "▼";
+        }
+
+        .sort-neutral .sort-indicator::after {
+            content: "⇅";
+            opacity: 0.4;
+        }
+    </style>
+}

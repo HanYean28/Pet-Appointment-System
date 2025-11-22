@@ -1,0 +1,872 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Email" xml:space="preserve">
+    <value>邮箱</value>
+  </data>
+  <data name="Login_Description" xml:space="preserve">
+    <value>请输入您的电子邮件和密码以登录。</value>
+  </data>
+  <data name="New User" xml:space="preserve">
+    <value>首次使用 Pawfect Grooming？</value>
+  </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>记住我</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="Forgot Password" xml:space="preserve">
+    <value> 忘记密码</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>注册</value>
+  </data>
+  <data name="Register_Description" xml:space="preserve">
+    <value>请填写以下表格以创建新账户。创建后，您即可登录并管理您的个人资料。</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>男</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>女</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名字</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>性别</value>
+  </data>
+  <data name="Select Gender" xml:space="preserve">
+    <value>选择性别</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>照片</value>
+  </data>
+  <data name="Select Photo" xml:space="preserve">
+    <value>选择照片</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>设置新密码</value>
+  </data>
+  <data name="New Password_Description" xml:space="preserve">
+    <value>请输入您的新密码以重置账户。</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="Update Password" xml:space="preserve">
+    <value>更新密码</value>
+  </data>
+  <data name="Return to Login" xml:space="preserve">
+    <value>返回登录</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
+  <data name="Reset Password_Description" xml:space="preserve">
+    <value>请输入您的电子邮箱地址以重置密码。您将收到一封电子邮件，其中包含创建新密码的说明。</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>服务</value>
+  </data>
+  <data name="Appointments" xml:space="preserve">
+    <value>预约</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>联系方式</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>会员</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>管理员</value>
+  </data>
+  <data name="Update Profile" xml:space="preserve">
+    <value>更新个人资料</value>
+  </data>
+  <data name="Product Maintenance" xml:space="preserve">
+    <value>产品管理</value>
+  </data>
+  <data name="Category Maintenance" xml:space="preserve">
+    <value>品类管理</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Pet Profile" xml:space="preserve">
+    <value>宠物资料</value>
+  </data>
+  <data name="TagLine" xml:space="preserve">
+    <value>您的宠物值得拥有专业细致的美容护理，展现迷人风采。</value>
+  </data>
+  <data name="Newsletter Description" xml:space="preserve">
+    <value>订阅我们的通讯，第一时间获取独家资讯与专业指南。</value>
+  </data>
+  <data name="Your Email" xml:space="preserve">
+    <value>您的邮箱</value>
+  </data>
+  <data name="Quick Links" xml:space="preserve">
+    <value>快速链接</value>
+  </data>
+  <data name="Login successfully." xml:space="preserve">
+    <value>登录成功。</value>
+  </data>
+  <data name="Book Appointment" xml:space="preserve">
+    <value>预约服务</value>
+  </data>
+  <data name="Welcome to" xml:space="preserve">
+    <value>欢迎来到</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Newsletter" xml:space="preserve">
+    <value>通讯 </value>
+  </data>
+  <data name="Contact Us" xml:space="preserve">
+    <value>联系我们 </value>
+  </data>
+  <data name="Opening Hours" xml:space="preserve">
+    <value>营业时间 </value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>星期一 </value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>星期六 </value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>星期日 </value>
+  </data>
+  <data name="Payment History" xml:space="preserve">
+    <value>付款记录</value>
+  </data>
+  <data name="Phone Number" xml:space="preserve">
+    <value>电话号码 </value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>地址 </value>
+  </data>
+  <data name="We look forward to pampering your pets!" xml:space="preserve">
+    <value>我们期待为您的宠物提供贴心呵护！</value>
+  </data>
+  <data name="Admin Verification Password" xml:space="preserve">
+    <value>管理员验证密码</value>
+  </data>
+  <data name="optional" xml:space="preserve">
+    <value>可选</value>
+  </data>
+  <data name="Enter admin key to register as admin" xml:space="preserve">
+    <value>输入管理员密钥以注册为管理员</value>
+  </data>
+  <data name="Provide the fixed admin verification password to register an Admin account." xml:space="preserve">
+    <value>提供固定的管理员验证密码以注册管理员账户。</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>休息 </value>
+  </data>
+  <data name="Capture Photo" xml:space="preserve">
+    <value>拍照</value>
+  </data>
+  <data name="View Profile" xml:space="preserve">
+    <value>查看个人资料</value>
+  </data>
+  <data name="My Profile" xml:space="preserve">
+    <value>我的资料</value>
+  </data>
+  <data name="Edit Profile" xml:space="preserve">
+    <value>编辑资料</value>
+  </data>
+  <data name="UpdateProfile_Description" xml:space="preserve">
+    <value>请在下方更新您的个人资料信息。
+您可以更改姓名并上传新照片。
+您的电子邮件地址无法在此更改。</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Top Seller Services" xml:space="preserve">
+    <value>畅销服务项目</value>
+  </data>
+  <data name="Our most popular grooming services loved by pet owners across Malaysia" xml:space="preserve">
+    <value>我们在马来西亚最受宠物主人喜爱的美容服务</value>
+  </data>
+  <data name="Why Choose" xml:space="preserve">
+    <value>为什么选择</value>
+  </data>
+  <data name="Certified Groomers" xml:space="preserve">
+    <value>认证美容师</value>
+  </data>
+  <data name="Our team consists of professionally trained and certified pet groomers with years of experience." xml:space="preserve">
+    <value>我们的团队由经过专业培训并持有认证的宠物美容师组成，拥有多年的经验。</value>
+  </data>
+  <data name="Stress-Free Environment" xml:space="preserve">
+    <value>无压力的环境</value>
+  </data>
+  <data name="We create a calm and comfortable atmosphere to ensure your pet feels safe and relaxed during grooming." xml:space="preserve">
+    <value>我们营造一个平静舒适的环境，让您的宠物在美容过程中感到安全和放松。</value>
+  </data>
+  <data name="Convenient Booking" xml:space="preserve">
+    <value>便捷的预约服务</value>
+  </data>
+  <data name="Our online appointment system makes it easy to schedule, reschedule, or cancel grooming sessions anytime." xml:space="preserve">
+    <value>我们的在线预约系统让您可以随时轻松安排、重新安排或取消宠物美容服务。</value>
+  </data>
+  <data name="What Our Customers Say" xml:space="preserve">
+    <value>顾客评价</value>
+  </data>
+  <data name="Check Our Location" xml:space="preserve">
+    <value>查看我们的地点</value>
+  </data>
+  <data name="Our Pet Grooming Services" xml:space="preserve">
+    <value>我们的宠物美容服务</value>
+  </data>
+  <data name="Professional grooming services tailored to your pet's needs. We provide the best care for your furry friends." xml:space="preserve">
+    <value>专业的宠物美容服务，量身定制满足您的宠物需求。我们为您的毛孩子提供最贴心的护理。</value>
+  </data>
+  <data name="View Services" xml:space="preserve">
+    <value>查看服务项目</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Choose Your Pet Type" xml:space="preserve">
+    <value>选择您的宠物类型</value>
+  </data>
+  <data name="We offer specialized grooming services for dogs and cats. Select your pet type to see our tailored services." xml:space="preserve">
+    <value>我们为狗狗和猫咪提供专业的美容服务。请选择您的宠物类型以查看专属服务内容。</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Cat" xml:space="preserve">
+    <value>猫咪</value>
+  </data>
+  <data name="Dog" xml:space="preserve">
+    <value>狗狗</value>
+  </data>
+  <data name="Packages" xml:space="preserve">
+    <value>套餐</value>
+  </data>
+  <data name="Grooming Services" xml:space="preserve">
+    <value>美容服务</value>
+  </data>
+  <data name="Additional Services" xml:space="preserve">
+    <value>附加服务</value>
+  </data>
+  <data name="Enhance your pet's grooming experience with these add-on services." xml:space="preserve">
+    <value>通过这些附加服务，让您的宠物美容体验更加完善。</value>
+  </data>
+  <data name="Teeth Brushing" xml:space="preserve">
+    <value>刷牙</value>
+  </data>
+  <data name="Keep your pet's teeth clean and breath fresh with our dental care service." xml:space="preserve">
+    <value>通过我们的牙齿护理服务，保持宠物牙齿清洁，口气清新。</value>
+  </data>
+  <data name="Pawdicure" xml:space="preserve">
+    <value>爪部护理</value>
+  </data>
+  <data name="Special treatment for your pet's paws including moisturizing and nail polish." xml:space="preserve">
+    <value>为您的宠物爪子提供特别护理，包括保湿和涂指甲油。</value>
+  </data>
+  <data name="Flea Treatment" xml:space="preserve">
+    <value>除蚤护理</value>
+  </data>
+  <data name="Effective flea treatment to keep your pet comfortable and your home pest-free." xml:space="preserve">
+    <value>有效的除蚤护理，让您的宠物舒适自在，您的家远离害虫困扰。</value>
+  </data>
+  <data name="Aromatherapy" xml:space="preserve">
+    <value>芳香疗法</value>
+  </data>
+  <data name="Calming aromatherapy treatment to reduce stress and anxiety during grooming." xml:space="preserve">
+    <value>舒缓的芳香疗法护理，有助于在美容过程中减轻压力和焦虑。</value>
+  </data>
+  <data name="Book This Service" xml:space="preserve">
+    <value>预订此服务</value>
+  </data>
+  <data name="Basic Bath" xml:space="preserve">
+    <value>基础洗澡</value>
+  </data>
+  <data name="Perfect for regular maintenance. Includes bath with premium shampoo, blow dry, and basic grooming." xml:space="preserve">
+    <value>适合日常护理，包括使用优质洗发水洗澡、吹干和基础美容。</value>
+  </data>
+  <data name="Professional Nail Trimming" xml:space="preserve">
+    <value>专业修剪指甲</value>
+  </data>
+  <data name="Gentle Ear Cleaning" xml:space="preserve">
+    <value>温和清洁耳朵</value>
+  </data>
+  <data name="Quick Brush Out" xml:space="preserve">
+    <value>快速梳理</value>
+  </data>
+  <data name="Paw Pad Check" xml:space="preserve">
+    <value>爪垫检查</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>从</value>
+  </data>
+  <data name="Bath &amp; Brush" xml:space="preserve">
+    <value>洗澡与梳理</value>
+  </data>
+  <data name="Thorough bath and brushing service to keep your dog's coat healthy and tangle-free." xml:space="preserve">
+    <value>全面的洗澡与梳理服务，帮助狗狗保持毛发健康、无打结。</value>
+  </data>
+  <data name="All Basic Bath Services" xml:space="preserve">
+    <value>所有基础洗澡服务</value>
+  </data>
+  <data name="Thorough Brushing" xml:space="preserve">
+    <value>彻底梳理</value>
+  </data>
+  <data name="De-shedding Treatment" xml:space="preserve">
+    <value>去除浮毛护理</value>
+  </data>
+  <data name="Mat Removal" xml:space="preserve">
+    <value>打结毛发处理</value>
+  </data>
+  <data name="Anal Gland Expression" xml:space="preserve">
+    <value>肛门腺排放护理 </value>
+  </data>
+  <data name="Nail Trim &amp; Ear Cleaning" xml:space="preserve">
+    <value>修剪指甲与清洁耳朵</value>
+  </data>
+  <data name="Thorough Ear Cleaning" xml:space="preserve">
+    <value>彻底清洁耳朵</value>
+  </data>
+  <data name="Paw Pad Trimming" xml:space="preserve">
+    <value>爪垫修剪</value>
+  </data>
+  <data name="Quick Brush" xml:space="preserve">
+    <value>快速梳毛</value>
+  </data>
+  <data name="Cat Bath &amp; Brush" xml:space="preserve">
+    <value>猫咪洗澡与梳理</value>
+  </data>
+  <data name="Gentle bathing and brushing service specially designed for cats with cat-friendly products." xml:space="preserve">
+    <value>专为猫咪设计的温和洗澡与梳理服务，使用猫咪专用产品，呵护敏感肌肤。</value>
+  </data>
+  <data name="Cat-Specific Shampoo" xml:space="preserve">
+    <value>猫咪专用洗发水</value>
+  </data>
+  <data name="Gentle Blow Dry" xml:space="preserve">
+    <value>温和吹干 </value>
+  </data>
+  <data name="Nail Trimming" xml:space="preserve">
+    <value>修剪指甲</value>
+  </data>
+  <data name="Ear Cleaning" xml:space="preserve">
+    <value>清洁耳朵</value>
+  </data>
+  <data name="Cat Full Grooming" xml:space="preserve">
+    <value>猫咪全套美容护理</value>
+  </data>
+  <data name="Complete grooming package for cats including bath, fur trimming, and all basic services." xml:space="preserve">
+    <value>猫咪全套美容护理，包括洗澡、毛发修剪及所有基础服务。</value>
+  </data>
+  <data name="Lion Cut (Optional)" xml:space="preserve">
+    <value>狮子造型修剪（可选）</value>
+  </data>
+  <data name="Sanitary Trim" xml:space="preserve">
+    <value>私密部位修剪</value>
+  </data>
+  <data name="Breed-Specific Grooming" xml:space="preserve">
+    <value>针对品种的美容护理</value>
+  </data>
+  <data name="Quick service for cats who need nail trimming and ear cleaning without a full bath." xml:space="preserve">
+    <value>适用于仅需修剪指甲和清洁耳朵的猫咪，无需洗澡的快速护理服务。</value>
+  </data>
+  <data name="Specialized grooming tailored to your dog's breed standards and coat requirements." xml:space="preserve">
+    <value>根据犬种标准与毛发需求定制的专业美容护理服务。</value>
+  </data>
+  <data name="All Full Grooming Services" xml:space="preserve">
+    <value>所有全套美容护理服务</value>
+  </data>
+  <data name="Breed-Specific Cut" xml:space="preserve">
+    <value>针对品种的造型修剪</value>
+  </data>
+  <data name="Specialized Coat Treatment" xml:space="preserve">
+    <value>专业毛发护理</value>
+  </data>
+  <data name="Show-Quality Styling" xml:space="preserve">
+    <value>展览级造型护理</value>
+  </data>
+  <data name="Breed-Specific Products" xml:space="preserve">
+    <value>针对品种的专用产品</value>
+  </data>
+  <data name="Specialized treatment to reduce shedding by up to 90% for heavy shedding breeds." xml:space="preserve">
+    <value>针对严重掉毛品种的专业护理，可减少多达90%的掉毛量。</value>
+  </data>
+  <data name="Special De-shedding Shampoo" xml:space="preserve">
+    <value>专用脱毛护理洗发水</value>
+  </data>
+  <data name="Professional De-shedding Tools" xml:space="preserve">
+    <value>专业脱毛护理工具</value>
+  </data>
+  <data name="High-Velocity Blow Dry" xml:space="preserve">
+    <value>高速吹风干燥护理</value>
+  </data>
+  <data name="Coat Conditioning Treatment" xml:space="preserve">
+    <value>毛发护理调理服务</value>
+  </data>
+  <data name="Flea &amp; Tick Treatment" xml:space="preserve">
+    <value>跳蚤与蜱虫防治护理</value>
+  </data>
+  <data name="Specialized treatment to eliminate fleas and ticks and prevent reinfestation. " xml:space="preserve">
+    <value>专业驱虫护理，消除跳蚤与蜱虫并防止再次感染</value>
+  </data>
+  <data name="Pet Type" xml:space="preserve">
+    <value>宠物类型</value>
+  </data>
+  <data name="Cat &amp; Dog" xml:space="preserve">
+    <value>猫咪与狗狗</value>
+  </data>
+  <data name="Flea &amp; Tick Shampoo" xml:space="preserve">
+    <value>跳蚤与蜱虫洗发水</value>
+  </data>
+  <data name="Thorough Inspection" xml:space="preserve">
+    <value>全面检查</value>
+  </data>
+  <data name="Extended Treatment Time" xml:space="preserve">
+    <value>延长护理时间</value>
+  </data>
+  <data name="Preventative Spray Application" xml:space="preserve">
+    <value>预防性喷雾护理</value>
+  </data>
+  <data name="Home Care Recommendations" xml:space="preserve">
+    <value>居家护理建议</value>
+  </data>
+  <data name="Haircut &amp; Styling Sanitary Trim" xml:space="preserve">
+    <value>造型剪毛与卫生修剪</value>
+  </data>
+  <data name="Full Grooming" xml:space="preserve">
+    <value>全套美容护理</value>
+  </data>
+  <data name="Complete grooming package including bath, haircut, styling, and all basic services for a fresh, clean look." xml:space="preserve">
+    <value>包含洗澡、剪毛、造型及所有基础护理服务的全套美容套餐，让宠物焕然一新、清爽整洁。</value>
+  </data>
+  <data name="Medicated Bath" xml:space="preserve">
+    <value>药浴护理</value>
+  </data>
+  <data name="Special treatment for dogs with skin conditions, allergies, or other dermatological issues. " xml:space="preserve">
+    <value>针对皮肤问题、过敏或其他皮肤疾病的犬类专属护理服务</value>
+  </data>
+  <data name="Medicated Shampoo" xml:space="preserve">
+    <value>药用洗发水</value>
+  </data>
+  <data name="Skin Assessment" xml:space="preserve">
+    <value>皮肤状况评估</value>
+  </data>
+  <data name="Extended Soaking Time" xml:space="preserve">
+    <value>延长浸泡时间</value>
+  </data>
+  <data name="Gentle Drying Process" xml:space="preserve">
+    <value>温和吹干护理流程</value>
+  </data>
+  <data name="Skin Moisturizing Treatment" xml:space="preserve">
+    <value>皮肤滋润护理</value>
+  </data>
+  <data name="Premium Spa Package" xml:space="preserve">
+    <value>尊享宠物水疗套餐</value>
+  </data>
+  <data name="Luxury treatment for your pet with premium products, special treatments, and extra pampering." xml:space="preserve">
+    <value>为您的宠物提供奢华护理，使用高端产品、专属疗程与额外呵护。</value>
+  </data>
+  <data name="Luxury Shampoo &amp; Conditioner" xml:space="preserve">
+    <value>奢华洗发护发组合</value>
+  </data>
+  <data name="Paw Moisturizing Treatment" xml:space="preserve">
+    <value>爪垫滋润护理</value>
+  </data>
+  <data name="Facial Scrub" xml:space="preserve">
+    <value>宠物面部去角质护理</value>
+  </data>
+  <data name="Pet-Safe Cologne" xml:space="preserve">
+    <value>宠物专用香氛喷雾</value>
+  </data>
+  <data name="Decorative Bow or Bandana" xml:space="preserve">
+    <value>装饰蝴蝶结或宠物头巾</value>
+  </data>
+  <data name="My Appointments" xml:space="preserve">
+    <value>我的预约</value>
+  </data>
+  <data name="New Appointment" xml:space="preserve">
+    <value>新增预约</value>
+  </data>
+  <data name="No appointments yet" xml:space="preserve">
+    <value>暂无预约</value>
+  </data>
+  <data name="Book your first appointment to get started" xml:space="preserve">
+    <value>立即预约首次护理，开启宠物美容之旅</value>
+  </data>
+  <data name="Upcoming Appointments" xml:space="preserve">
+    <value>即将到来的预约</value>
+  </data>
+  <data name="No Service/Package Selected" xml:space="preserve">
+    <value>未选择任何服务或套餐未选择任何服务或套餐</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="PendingPayment" xml:space="preserve">
+    <value>PendingPayment</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>重新安排时间</value>
+  </data>
+  <data name="Are you sure you want to cancel this appointment?" xml:space="preserve">
+    <value>您确定要取消此次预约吗？</value>
+  </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>无法执行操作</value>
+  </data>
+  <data name="You are NOT AUTHORIZED to access the page" xml:space="preserve">
+    <value>您无权访问此页面</value>
+  </data>
+  <data name="Please enter your current password and the new password you wish to set." xml:space="preserve">
+    <value>请输入您当前的密码以及要设置的新密码。提交前请确认新密码无误。</value>
+  </data>
+  <data name="Current Password" xml:space="preserve">
+    <value>当前密码</value>
+  </data>
+  <data name="New Password" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="Please enter your current password and the new password you wish to set. Make sure to confirm the new password before submitting." xml:space="preserve">
+    <value>请输入您当前的密码以及要设置的新密码。提交前请确认新密码无误。</value>
+  </data>
+  <data name="No payments found." xml:space="preserve">
+    <value>未找到付款记录</value>
+  </data>
+  <data name="Payment Method" xml:space="preserve">
+    <value>付款方式</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Payment Type" xml:space="preserve">
+    <value>付款类型</value>
+  </data>
+  <data name="E-receipt" xml:space="preserve">
+    <value>电子收据</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>押金</value>
+  </data>
+  <data name="Full Payment" xml:space="preserve">
+    <value>全额付款</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>已付款</value>
+  </data>
+  <data name="Add New Pet" xml:space="preserve">
+    <value>添加新宠物</value>
+  </data>
+  <data name="Provide a brief summary of the pet’s personality, behavior, and any special traits. This helps staff or adopters understand the pet better." xml:space="preserve">
+    <value>请简要描述宠物的性格、行为以及任何特殊特征。这有助于工作人员或领养者更好地了解宠物。</value>
+  </data>
+  <data name="Breed" xml:space="preserve">
+    <value>品种</value>
+  </data>
+  <data name="Age" xml:space="preserve">
+    <value>年龄</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>体重</value>
+  </data>
+  <data name="Medical Notes" xml:space="preserve">
+    <value>医疗备注</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>详细信息</value>
+  </data>
+  <data name="Back to Pets" xml:space="preserve">
+    <value>返回宠物页面</value>
+  </data>
+  <data name="My Pets" xml:space="preserve">
+    <value>我的宠物</value>
+  </data>
+  <data name="You don’t have any pets yet. Start by adding one!" xml:space="preserve">
+    <value>您还没有添加任何宠物。快来添加一只吧！</value>
+  </data>
+  <data name="Add Your First Pet" xml:space="preserve">
+    <value>添加您的第一只宠物</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Edit Pet Information" xml:space="preserve">
+    <value>编辑宠物信息</value>
+  </data>
+  <data name="Save Changes" xml:space="preserve">
+    <value>保存更改</value>
+  </data>
+  <data name="Are you sure you want to delete" xml:space="preserve">
+    <value>您确定要删除</value>
+  </data>
+  <data name="This cannot be undone!" xml:space="preserve">
+    <value>此操作无法撤销</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>支付</value>
+  </data>
+  <data name="Book Your Appointment" xml:space="preserve">
+    <value>预约您的时间</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="Pet Info" xml:space="preserve">
+    <value>宠物信息</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="Select Pet" xml:space="preserve">
+    <value>选择宠物</value>
+  </data>
+  <data name="Choose a pet" xml:space="preserve">
+    <value>选择一只宠物</value>
+  </data>
+  <data name="No pet found. Please add a pet in your profile before booking." xml:space="preserve">
+    <value>未找到宠物。请先在您的个人资料中添加宠物，然后再进行预约。</value>
+  </data>
+  <data name="Owner Information" xml:space="preserve">
+    <value>主人信息</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Please update your information in Update Profile." xml:space="preserve">
+    <value>请在“更新资料”中更新您的信息。</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>上一步</value>
+  </data>
+  <data name="Confirm Appointment" xml:space="preserve">
+    <value>确认预约</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>活跃</value>
+  </data>
+  <data name="Deactivate" xml:space="preserve">
+    <value>已停用</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="Activate" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="First" xml:space="preserve">
+    <value>第一</value>
+  </data>
+  <data name="Last" xml:space="preserve">
+    <value>最后</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="Admin Management" xml:space="preserve">
+    <value>管理员管理</value>
+  </data>
+  <data name="Package Maintenance" xml:space="preserve">
+    <value>套餐维护</value>
+  </data>
+  <data name="Service Maintenance" xml:space="preserve">
+    <value>服务维护</value>
+  </data>
+  <data name="Appointment Maintenance" xml:space="preserve">
+    <value>预约维护</value>
+  </data>
+  <data name="record(s)" xml:space="preserve">
+    <value>记录</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>页面</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>照片</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>价格</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>加入</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>特点</value>
+  </data>
+  <data name="Existing Photos" xml:space="preserve">
+    <value>现有照片</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Update Service" xml:space="preserve">
+    <value>更新服务</value>
+  </data>
+  <data name="Please update service information below." xml:space="preserve">
+    <value>请更新以下服务信息。</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>登录历史</value>
+  </data>
+</root>

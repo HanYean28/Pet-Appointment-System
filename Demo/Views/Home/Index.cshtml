@@ -1,0 +1,210 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@using PawfectGrooming.Controllers
+@using PawfectGrooming.Models
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var top = ViewBag.TopSellers as List<TopSellerVM> ?? new List<TopSellerVM>();
+}
+<section class="home-section">
+
+    <h1 class="home-title">@Localizer["Welcome to"] Pawfect Grooming</h1>
+    <p class="home-subtitle"> 
+        @Localizer["TagLine"]
+    </p>
+    <a href="/Home/Services" class="btn home-btn">@Localizer["Book Appointment"]</a>
+</section>
+
+<!-- Top Seller Services -->
+@if (top.Any())
+{
+    <section class="top-seller-section">
+        <div class="top-seller-header">
+            <h2 class="text-3xl font-bold mb-4">🏆 @Localizer["Top Seller Services"]</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                @Localizer["Our most popular grooming services loved by pet owners across Malaysia"]
+            </p>
+        </div>
+
+        <div class="top-seller-grid">
+            @for (int i = 0; i < top.Count; i++)
+            {
+                var s = top[i];
+                var rank = i + 1;
+
+                // label + styles per rank
+                var badgeText = rank == 1 ? "#1 BEST SELLER" : rank == 2 ? "#2 TOP CHOICE" : $"#{rank} PREMIUM";
+                var badgeClass = rank == 1 ? "badge-gold" : rank == 2 ? "badge-gold" : "badge-gold";
+                var cardBorderClass = rank == 1 ? "border-gold" : rank == 2 ? "border-blue" : "border-purple";
+            <div class="top-seller-card @cardBorderClass" ">
+                <div class="top-seller-badge @badgeClass">
+                    @badgeText
+                </div>
+
+                <span class="top-seller-price-tag">From RM @s.Price</span>
+                <div class="top-seller-box">
+                    <img src="@(s.ImageUrl ?? "/images/noimage.png")" alt="@s.Name" />
+                </div>
+
+                <h3 style="margin-top:0.75rem;">@s.Name</h3>
+
+                @* description *@
+                @if (!string.IsNullOrWhiteSpace(s.Description))
+                {
+                    <p class="top-seller-desc" style="margin:0.5rem 0;color:#374151;">@s.Description</p>
+                }
+
+                @* features formatted with " + " *@
+                @if (!string.IsNullOrWhiteSpace(s.FeaturesFormatted))
+                {
+                    <p class="top-seller-features" style="font-weight:600;color:#ef466f;margin-bottom:.75rem;">
+                        @s.FeaturesFormatted
+                    </p>
+                }
+
+                <p class="rating">⭐ · @s.Count bookings</p>
+                <p>Popular @s.ItemType.ToLower()</p>
+
+                @if (s.ItemType == "Package")
+                {
+                    <a href="/Home/Book?packageId=@s.Id" class="btn book-btn">@Localizer["Book This Package"]</a>
+                }
+                else
+                {
+                    <a href="/Home/Book?serviceId=@s.Id" class="btn book-btn">@Localizer["Book This Service"]</a>
+                }
+            </div>
+            }
+        </div>
+    </section>
+}
+
+<!-- Features Section -->
+<section class="features-section" style="margin-top:3em; text-align:center;">
+    <h2>@Localizer["Why Choose"] Pawfect Grooming?</h2>
+    <div class="features-container">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+            <h3>@Localizer["Certified Groomers"]</h3>
+            <p>@Localizer["Our team consists of professionally trained and certified pet groomers with years of experience."]</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-heart"></i></div>
+            <h3>@Localizer["Stress-Free Environment"]</h3>
+            <p>@Localizer["We create a calm and comfortable atmosphere to ensure your pet feels safe and relaxed during grooming."]</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+            <h3>@Localizer["Convenient Booking"]</h3>
+            <p>@Localizer["Our online appointment system makes it easy to schedule, reschedule, or cancel grooming sessions anytime."]</p>
+        </div>
+    </div>
+</section>
+
+@functions {
+    string RenderStars(int rating)
+    {
+        return string.Concat(Enumerable.Repeat("&#9733;", rating)); // ★
+    }
+}
+
+<!-- user review -->
+<section class="testimonials-section" style="margin-top:4em; text-align:center;">
+    <h2>@Localizer["What Our Customers Say"]</h2>
+    <div class="testimonials-container">
+
+        <div class="testimonial-card">
+            <div class="avatar">DC</div>
+            <h4>Daniel Chan</h4>
+            <div class="stars">@Html.Raw(RenderStars(5))</div>
+            <p>I used the online booking for a Bath & Brush service for my Husky, and it was really smooth. They did a great job with the de-shedding, though Coco was a little nervous at first. The team took their time to make him comfortable, which I appreciate</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="avatar">ST</div>
+            <h4>@Localizer["Sophia Tan"]</h4>
+            <div class="stars">@Html.Raw(RenderStars(5))</div>
+            <p>Pawfect Grooming handled my senior cat with so much care during her Nail Trim & Ear Cleaning appointment. She’s usually very fussy, but they were gentle and patient. I loved getting photo updates during the process—it made me feel at ease</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="avatar">SL</div>
+            <h4>Sarah Lee</h4>
+            <div class="stars">@Html.Raw(RenderStars(5))</div>
+            <p>I booked the Flea & Tick Treatment here for my rescued kitten. The groomer explained everything clearly and gave tips for home care. It’s clear they genuinely care about pets, not just the business</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="avatar">EV</div>
+            <h4>Evelyn Ha</h4>
+            <div class="stars">@Html.Raw(RenderStars(5))</div>
+            <p>Tried their Premium Spa Package for my Golden Retriever, Bailey. She smelled amazing and her coat was so soft afterward! Booking was easy, but the weekend slots fill up fast, so book early</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="avatar">RC</div>
+            <h4>Roxy Chan</h4>
+            <div class="stars">@Html.Raw(RenderStars(5))</div>
+            <p>I booked my Schnauzer, Latte, for the Full Grooming package at Pawfect Grooming, and she came home looking like a show dog! The staff were super friendly and even remembered Latte’s favorite treat. Definitely my go-to grooming place now</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="avatar">TC</div>
+            <h4>@Localizer["Tom Cruise"]</h4>
+            <div class="stars">@Html.Raw(RenderStars(5))</div>
+            <p>@Localizer["I booked the Pawdicure service at Pawfect Grooming for my Pomeranian, Luna. Her paws were moisturized, nails neatly trimmed, and they even added a cute polish! The whole process was quick, and Luna seemed totally relaxed—highly recommend for a little extra pampering."]</p>
+        </div>
+    </div>
+</section>
+
+<!-- Google Maps API Section -->
+<section class="map-section" style="margin-top:2em; text-align:center;">
+    <h2 style="font-family: Arial Black; color: blue; font-size: large;">
+        @Localizer["Check Our Location"]
+    </h2>
+    <div id="googleMap"></div>
+</section>
+
+<style>
+    #googleMap {
+        height: 400px;
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #ccc;
+        cursor: pointer; /* makes the map clickable */
+    }
+</style>
+
+<script>
+    function myMap() {
+        // store location
+        var myCenter = new google.maps.LatLng(3.1269168, 101.7311555);
+
+        // map settings
+        var map = new google.maps.Map(document.getElementById("googleMap"), {
+            center: myCenter,
+            zoom: 16,
+            scrollwheel: true,
+            draggable: true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        // Marker
+        var marker = new google.maps.Marker({
+            position: myCenter,
+            map: map,
+            title: "Pawfect Grooming"
+        });
+
+        // Make the entire map clickable → opens Google Maps location
+        google.maps.event.addListener(map, "click", function () {
+            window.open(
+                "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.878261131534!2d101.73106489999999!3d3.1268738000000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc37a8af85cb99%3A0x6f80d987ebb95592!2zSGFpcnkgSG9tZSDmr5vlrankuYvlrrY!5e0!3m2!1sen!2smy!4v1757396184152!5m2!1sen!2smy", 
+                "_blank",
+                allowfullscreen=""
+            );
+        });
+    }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlMcOTxqKaOX3gf0LFQ_GVCsNSI1gpYqM&callback=myMap"></script>

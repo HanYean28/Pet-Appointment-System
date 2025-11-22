@@ -1,0 +1,85 @@
+﻿@model PawfectGrooming.Models.Booking
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    var pets = ViewBag.Pets as List<PawfectGrooming.Models.Pets> ?? new List<PawfectGrooming.Models.Pets>();
+    var hasPets = pets != null && pets.Any();
+}
+<section class="booking-section">
+    <h1 class="section-title">@Localizer["Book Your Appointment"]</h1>
+    <div class="booking-card">
+        <partial name="_BookingSteps" model="2" />
+        <form asp-action="BookStep2" method="post" class="booking-content">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="hidden" name="ServiceId" value="@(Model.ServiceId.HasValue && Model.ServiceId.Value > 0 ? Model.ServiceId.Value : (int?)null)" />
+            <input type="hidden" name="PackageId" value="@(Model.PackageId.HasValue && Model.PackageId.Value > 0 ? Model.PackageId.Value : (int?)null)" />
+            <input type="hidden" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+            <input type="hidden" name="Time" value="@Model.Time" />
+            <input type="hidden" name="appointmentId" value="@(Model.Id != 0 ? Model.Id : ViewBag.AppointmentId)" /> 
+
+            <div class="form-grid">
+                <div class="form-section">
+                    <div class="booking-label">@Localizer["Pet Info"]</div>
+                    <div class="grid-row">
+                        <div class="grid-col">
+                            <label>@Localizer["Select Pet"]</label>
+                            @if (hasPets)
+                            {
+                                <select name="PetId" required>
+                                    <option value="">@Localizer["Choose a pet"]</option>
+                                    @foreach (var pet in pets)
+                                    {
+                                        var selected = Model.PetId == pet.PetId ? "selected" : "";
+                                        <option value="@pet.PetId" selected="@(selected == "selected" ? "selected" : null)">
+                                            @pet.Name (@Localizer[@pet.PetType])
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <div>
+                                    <span>@Localizer["No pet found. Please add a pet in your profile before booking."]</span>
+                                    <a href="@Url.Action("CreatePet", "Pet")" class="btn btn-primary">@Localizer["Add New Pet"]</a>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="booking-label">@Localizer["Owner Information"]</div>
+                    <div class="grid-row">
+                        <div class="grid-col">
+                            <label>@Localizer["Name"]</label>
+                            <input type="text" name="OwnerName" value="@Model.User.Name" readonly  class="locked-field" /> <!-- readonly means locked field -->
+                        </div>
+                        <div class="grid-col">
+                            <label>@Localizer["Phone Number"]</label>
+                            <input type="tel" name="OwnerPhone" value="@Model.User.PhoneNumber" readonly class="locked-field" />
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-col-wide">
+                            <label>@Localizer["Email"]</label>
+                            <input type="email" name="OwnerEmail" value="@Model.User.Email" readonly class="locked-field" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="booking-actions">
+                <a href="@Url.Action("Book", "Home", new { appointmentId = (Model.Id != 0 ? Model.Id : ViewBag.AppointmentId), step = 1 })" class="btn btn-prev">@Localizer["Previous"]</a>
+                <button type="submit" class="btn btn-next" @(hasPets ? "" : "disabled")>@Localizer["Next"]</button>
+            </div>
+        </form>
+    </div>
+</section>
+<script>
+    document.querySelectorAll(".locked-field").forEach(field => {
+        field.addEventListener("click", function () {
+            alert("@Localizer["Please update your information in Update Profile."]");
+        });
+    });
+</script>

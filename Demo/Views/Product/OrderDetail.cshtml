@@ -1,0 +1,87 @@
+﻿@model Order
+
+@{
+    ViewBag.Title = "Product | Order Detail";
+}
+
+@section head {
+    <style>
+        td img {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
+
+        td:nth-child(3),
+        td:nth-child(4),
+        td:nth-child(5) {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+}
+
+<form class="form">
+    <label>Id</label>
+    <span>@Model.Id</span>
+    <br>
+
+    <label>Date</label>
+    <span>@Model.Date.ToString("yyyy-MM-dd")</span>
+    <br>
+
+    <label>Paid</label>
+    <span>@(Model.Paid ? "Yes" : "No")</span>
+    <br>
+</form>
+
+<p>
+    <button data-get="/Product/Order">Back</button>
+</p>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+    </tr>
+
+    @{
+        int count = 0;
+        decimal total = 0;
+    }
+
+    @foreach (OrderLine ol in Model.OrderLines)
+    {
+        // Calculate subtotal, count and total
+        decimal subtotal = ol.Price * ol.Quantity;
+        count += ol.Quantity;
+        total += subtotal;
+
+        <tr>
+            <td>@ol.ServiceOption.Id</td> <!-- Changed from Id to Code -->
+            <td>
+                <img src="/products/@ol.ServiceOption.ImageURL">
+                @ol.ServiceOption.Id - @ol.ServiceOption.Name <!-- Changed from Id to Code -->
+            </td>
+            <td>@ol.Price</td>
+            <td>@ol.Quantity</td>
+            <td>@subtotal</td>
+        </tr>
+    }
+
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="bold">@count</td>
+        <td class="bold">@total</td>
+    </tr>
+</table>

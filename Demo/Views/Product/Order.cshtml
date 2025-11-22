@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Order>
+
+@{
+    ViewBag.Title = "Product | Order";
+}
+
+@section head {
+    <style>
+        td:nth-child(4),
+        td:nth-child(5) {
+            text-align: right;
+        }
+
+        .popup {
+            width: max-content;
+            padding: 0 !important;
+        }
+
+        .popup img {
+            width: 50px;
+            height: 50px;
+            outline: 1px solid #333;
+            float: left;
+        }
+    </style>
+}
+
+<p>
+    <button data-post="/Product/ResetAll">Reset All</button>
+</p>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <th>Date</th>
+        <th>Paid</th>
+        <th>Count</th>
+        <th>Total</th>
+        <th></th>
+    </tr>
+    @foreach (Order o in Model)
+    {
+        <tr>
+            <td>@o.Id</td>
+            <td>@o.Date.ToString("yyyy-MM-dd")</td>
+            <td>@(o.Paid ? "Yes" : "No")</td>
+
+            @* Calculate count and total *@
+            <td>@o.OrderLines.Sum(ol => ol.Quantity)</td>
+            <td>@o.OrderLines.Sum(ol => ol.Price * ol.Quantity)</td>
+
+            <td>
+                <button data-get="/Product/OrderDetail/@o.Id">Detail</button>
+
+                @* Product photos *@
+                <div class="popup">
+                    @foreach (var ol in o.OrderLines)
+                    {
+                        <img src="/products/@ol.ServiceOption.ImageURL">
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+</table>

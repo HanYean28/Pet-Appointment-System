@@ -1,0 +1,870 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Login_Description" xml:space="preserve">
+    <value>Please enter your email and password to log in.</value>
+  </data>
+  <data name="New User" xml:space="preserve">
+    <value>New to Pawfect Grooming?</value>
+  </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>Remember Me</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Forgot Password" xml:space="preserve">
+    <value>Forgot Password</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Register_Description" xml:space="preserve">
+    <value>Please fill in the form below to create a new account. You will be able to log in and manage your profile.</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="Select Gender" xml:space="preserve">
+    <value>Select Gender</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>Photo</value>
+  </data>
+  <data name="Select Photo" xml:space="preserve">
+    <value>Select Photo</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>Set New Password</value>
+  </data>
+  <data name="New Password_Description" xml:space="preserve">
+    <value>Please enter your new password to reset your account.</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="Update Password" xml:space="preserve">
+    <value>Update Password</value>
+  </data>
+  <data name="Return to Login" xml:space="preserve">
+    <value>Return to Login</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="Reset Password_Description" xml:space="preserve">
+    <value>Please enter your email address to reset your password. You will receive an email with instructions to create a new password.</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Services</value>
+  </data>
+  <data name="Appointments" xml:space="preserve">
+    <value>Appointments</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Member</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Update Profile" xml:space="preserve">
+    <value>Update Profile</value>
+  </data>
+  <data name="Product Maintenance" xml:space="preserve">
+    <value>Product Maintenance</value>
+  </data>
+  <data name="Category Maintenance" xml:space="preserve">
+    <value>Category Maintenance</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Pet Profile" xml:space="preserve">
+    <value>Pet Profile</value>
+  </data>
+  <data name="TagLine" xml:space="preserve">
+    <value>Professional pet grooming services for your furry friends.</value>
+  </data>
+  <data name="Newsletter Description" xml:space="preserve">
+    <value>Subscribe to our newsletter for tips and updates.</value>
+  </data>
+  <data name="Your Email" xml:space="preserve">
+    <value>Your Email</value>
+  </data>
+  <data name="Quick Links" xml:space="preserve">
+    <value>Quick Links</value>
+  </data>
+  <data name="Login successfully." xml:space="preserve">
+    <value>Login successfully.</value>
+  </data>
+  <data name="Book Appointment" xml:space="preserve">
+    <value>Book Appointment</value>
+  </data>
+  <data name="Welcome to" xml:space="preserve">
+    <value>Welcome to</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Newsletter" xml:space="preserve">
+    <value>Newsletter</value>
+  </data>
+  <data name="Contact Us" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="Opening Hours" xml:space="preserve">
+    <value>Opening Hours</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Monday</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Saturday</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Sunday</value>
+  </data>
+  <data name="Payment History" xml:space="preserve">
+    <value>Payment History</value>
+  </data>
+  <data name="Phone Number" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="We look forward to pampering your pets!" xml:space="preserve">
+    <value>We look forward to pampering your pets!</value>
+  </data>
+  <data name="Admin Verification Password" xml:space="preserve">
+    <value>Admin Verification Password</value>
+  </data>
+  <data name="optional" xml:space="preserve">
+    <value>optional</value>
+  </data>
+  <data name="Enter admin key to register as admin" xml:space="preserve">
+    <value>Enter admin key to register as admin</value>
+  </data>
+  <data name="Provide the fixed admin verification password to register an Admin account." xml:space="preserve">
+    <value>Provide the fixed admin verification password to register an Admin account.</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="Capture Photo" xml:space="preserve">
+    <value>Capture Photo</value>
+  </data>
+  <data name="View Profile" xml:space="preserve">
+    <value>View Profile</value>
+  </data>
+  <data name="My Profile" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+  <data name="Edit Profile" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="UpdateProfile_Description" xml:space="preserve">
+    <value>Please update your profile information below. You can change your name and upload a new photo. Your email address cannot be changed here.</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Top Seller Services" xml:space="preserve">
+    <value>Top Seller Services</value>
+  </data>
+  <data name="Our most popular grooming services loved by pet owners across Malaysia" xml:space="preserve">
+    <value>Our most popular grooming services loved by pet owners across Malaysia</value>
+  </data>
+  <data name="Why Choose" xml:space="preserve">
+    <value>Why Choose</value>
+  </data>
+  <data name="Certified Groomers" xml:space="preserve">
+    <value>Certified Groomers</value>
+  </data>
+  <data name="Our team consists of professionally trained and certified pet groomers with years of experience." xml:space="preserve">
+    <value>Our team consists of professionally trained and certified pet groomers with years of experience.</value>
+  </data>
+  <data name="Stress-Free Environment" xml:space="preserve">
+    <value>Stress-Free Environment</value>
+  </data>
+  <data name="We create a calm and comfortable atmosphere to ensure your pet feels safe and relaxed during grooming." xml:space="preserve">
+    <value>We create a calm and comfortable atmosphere to ensure your pet feels safe and relaxed during grooming.</value>
+  </data>
+  <data name="Convenient Booking" xml:space="preserve">
+    <value>Convenient Booking</value>
+  </data>
+  <data name="Our online appointment system makes it easy to schedule, reschedule, or cancel grooming sessions anytime." xml:space="preserve">
+    <value>Our online appointment system makes it easy to schedule, reschedule, or cancel grooming sessions anytime.</value>
+  </data>
+  <data name="What Our Customers Say" xml:space="preserve">
+    <value>What Our Customers Say</value>
+  </data>
+  <data name="Check Our Location" xml:space="preserve">
+    <value>Check Our Location</value>
+  </data>
+  <data name="Our Pet Grooming Services" xml:space="preserve">
+    <value>Our Pet Grooming Services</value>
+  </data>
+  <data name="Professional grooming services tailored to your pet's needs. We provide the best care for your furry friends." xml:space="preserve">
+    <value>Professional grooming services tailored to your pet's needs. We provide the best care for your furry friends.</value>
+  </data>
+  <data name="View Services" xml:space="preserve">
+    <value>View Services</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Choose Your Pet Type" xml:space="preserve">
+    <value>Choose Your Pet Type</value>
+  </data>
+  <data name="We offer specialized grooming services for dogs and cats. Select your pet type to see our tailored services." xml:space="preserve">
+    <value>We offer specialized grooming services for dogs and cats. Select your pet type to see our tailored services.</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Cat" xml:space="preserve">
+    <value>Cat</value>
+  </data>
+  <data name="Dog" xml:space="preserve">
+    <value>Dog</value>
+  </data>
+  <data name="Packages" xml:space="preserve">
+    <value>Packages</value>
+  </data>
+  <data name="Grooming Services" xml:space="preserve">
+    <value>Grooming Services</value>
+  </data>
+  <data name="Additional Services" xml:space="preserve">
+    <value>Additional Services</value>
+  </data>
+  <data name="Enhance your pet's grooming experience with these add-on services." xml:space="preserve">
+    <value>Enhance your pet's grooming experience with these add-on services.</value>
+  </data>
+  <data name="Teeth Brushing" xml:space="preserve">
+    <value>Teeth Brushing</value>
+  </data>
+  <data name="Keep your pet's teeth clean and breath fresh with our dental care service." xml:space="preserve">
+    <value>Keep your pet's teeth clean and breath fresh with our dental care service.</value>
+  </data>
+  <data name="Pawdicure" xml:space="preserve">
+    <value>Pawdicure</value>
+  </data>
+  <data name="Special treatment for your pet's paws including moisturizing and nail polish." xml:space="preserve">
+    <value>Special treatment for your pet's paws including moisturizing and nail polish.</value>
+  </data>
+  <data name="Flea Treatment" xml:space="preserve">
+    <value>Flea Treatment</value>
+  </data>
+  <data name="Effective flea treatment to keep your pet comfortable and your home pest-free." xml:space="preserve">
+    <value>Effective flea treatment to keep your pet comfortable and your home pest-free.</value>
+  </data>
+  <data name="Aromatherapy" xml:space="preserve">
+    <value>Aromatherapy</value>
+  </data>
+  <data name="Calming aromatherapy treatment to reduce stress and anxiety during grooming." xml:space="preserve">
+    <value>Calming aromatherapy treatment to reduce stress and anxiety during grooming.</value>
+  </data>
+  <data name="Book This Service" xml:space="preserve">
+    <value>Book This Service</value>
+  </data>
+  <data name="Basic Bath" xml:space="preserve">
+    <value>Basic Bath</value>
+  </data>
+  <data name="Perfect for regular maintenance. Includes bath with premium shampoo, blow dry, and basic grooming." xml:space="preserve">
+    <value>Perfect for regular maintenance. Includes bath with premium shampoo, blow dry, and basic grooming.</value>
+  </data>
+  <data name="Professional Nail Trimming" xml:space="preserve">
+    <value>Professional Nail Trimming</value>
+  </data>
+  <data name="Gentle Ear Cleaning" xml:space="preserve">
+    <value>Gentle Ear Cleaning</value>
+  </data>
+  <data name="Quick Brush Out" xml:space="preserve">
+    <value>Quick Brush Out</value>
+  </data>
+  <data name="Paw Pad Check" xml:space="preserve">
+    <value>Paw Pad Check</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Bath &amp; Brush" xml:space="preserve">
+    <value>Bath &amp; Brush</value>
+  </data>
+  <data name="Thorough bath and brushing service to keep your dog's coat healthy and tangle-free." xml:space="preserve">
+    <value>Thorough bath and brushing service to keep your dog's coat healthy and tangle-free.</value>
+  </data>
+  <data name="All Basic Bath Services" xml:space="preserve">
+    <value>All Basic Bath Services</value>
+  </data>
+  <data name="Thorough Brushing" xml:space="preserve">
+    <value>Thorough Brushing</value>
+  </data>
+  <data name="De-shedding Treatment" xml:space="preserve">
+    <value>De-shedding Treatment</value>
+  </data>
+  <data name="Mat Removal" xml:space="preserve">
+    <value>Mat Removal</value>
+  </data>
+  <data name="Anal Gland Expression" xml:space="preserve">
+    <value>Anal Gland Expression</value>
+  </data>
+  <data name="Nail Trim &amp; Ear Cleaning" xml:space="preserve">
+    <value>Nail Trim &amp; Ear Cleaning</value>
+  </data>
+  <data name="Thorough Ear Cleaning" xml:space="preserve">
+    <value>Thorough Ear Cleaning</value>
+  </data>
+  <data name="Paw Pad Trimming" xml:space="preserve">
+    <value>Paw Pad Trimming</value>
+  </data>
+  <data name="Quick Brush" xml:space="preserve">
+    <value>Quick Brush</value>
+  </data>
+  <data name="Cat Bath &amp; Brush" xml:space="preserve">
+    <value>Cat Bath &amp; Brush</value>
+  </data>
+  <data name="Gentle bathing and brushing service specially designed for cats with cat-friendly products." xml:space="preserve">
+    <value>Gentle bathing and brushing service specially designed for cats with cat-friendly products.</value>
+  </data>
+  <data name="Cat-Specific Shampoo" xml:space="preserve">
+    <value>Cat-Specific Shampoo</value>
+  </data>
+  <data name="Gentle Blow Dry" xml:space="preserve">
+    <value>Gentle Blow Dry</value>
+  </data>
+  <data name="Nail Trimming" xml:space="preserve">
+    <value>Nail Trimming</value>
+  </data>
+  <data name="Ear Cleaning" xml:space="preserve">
+    <value>Ear Cleaning</value>
+  </data>
+  <data name="Cat Full Grooming" xml:space="preserve">
+    <value>Cat Full Grooming</value>
+  </data>
+  <data name="Complete grooming package for cats including bath, fur trimming, and all basic services." xml:space="preserve">
+    <value>Complete grooming package for cats including bath, fur trimming, and all basic services.</value>
+  </data>
+  <data name="Lion Cut (Optional)" xml:space="preserve">
+    <value>Lion Cut (Optional)</value>
+  </data>
+  <data name="Sanitary Trim" xml:space="preserve">
+    <value>Sanitary Trim</value>
+  </data>
+  <data name="Breed-Specific Grooming" xml:space="preserve">
+    <value>Breed-Specific Grooming</value>
+  </data>
+  <data name="Quick service for cats who need nail trimming and ear cleaning without a full bath." xml:space="preserve">
+    <value>Quick service for cats who need nail trimming and ear cleaning without a full bath.</value>
+  </data>
+  <data name="Specialized grooming tailored to your dog's breed standards and coat requirements." xml:space="preserve">
+    <value>Specialized grooming tailored to your dog's breed standards and coat requirements.</value>
+  </data>
+  <data name="All Full Grooming Services" xml:space="preserve">
+    <value>All Full Grooming Services</value>
+  </data>
+  <data name="Breed-Specific Cut" xml:space="preserve">
+    <value>Breed-Specific Cut</value>
+  </data>
+  <data name="Specialized Coat Treatment" xml:space="preserve">
+    <value>Specialized Coat Treatment</value>
+  </data>
+  <data name="Show-Quality Styling" xml:space="preserve">
+    <value>Show-Quality Styling</value>
+  </data>
+  <data name="Breed-Specific Products" xml:space="preserve">
+    <value>Breed-Specific Products</value>
+  </data>
+  <data name="Specialized treatment to reduce shedding by up to 90% for heavy shedding breeds." xml:space="preserve">
+    <value>Specialized treatment to reduce shedding by up to 90% for heavy shedding breeds.</value>
+  </data>
+  <data name="Special De-shedding Shampoo" xml:space="preserve">
+    <value>Special De-shedding Shampoo</value>
+  </data>
+  <data name="Professional De-shedding Tools" xml:space="preserve">
+    <value>Professional De-shedding Tools</value>
+  </data>
+  <data name="High-Velocity Blow Dry" xml:space="preserve">
+    <value>High-Velocity Blow Dry</value>
+  </data>
+  <data name="Coat Conditioning Treatment" xml:space="preserve">
+    <value>Coat Conditioning Treatment</value>
+  </data>
+  <data name="Flea &amp; Tick Treatment" xml:space="preserve">
+    <value>Flea &amp; Tick Treatment</value>
+  </data>
+  <data name="Specialized treatment to eliminate fleas and ticks and prevent reinfestation. " xml:space="preserve">
+    <value>Specialized treatment to eliminate fleas and ticks and prevent reinfestation.</value>
+  </data>
+  <data name="Pet Type" xml:space="preserve">
+    <value>Pet Type</value>
+  </data>
+  <data name="Cat &amp; Dog" xml:space="preserve">
+    <value>Cat &amp; Dog</value>
+  </data>
+  <data name="Flea &amp; Tick Shampoo" xml:space="preserve">
+    <value>Flea &amp; Tick Shampoo</value>
+  </data>
+  <data name="Thorough Inspection" xml:space="preserve">
+    <value>Thorough Inspection</value>
+  </data>
+  <data name="Extended Treatment Time" xml:space="preserve">
+    <value>Extended Treatment Time</value>
+  </data>
+  <data name="Preventative Spray Application" xml:space="preserve">
+    <value>Preventative Spray Application</value>
+  </data>
+  <data name="Home Care Recommendations" xml:space="preserve">
+    <value>Home Care Recommendations</value>
+  </data>
+  <data name="Haircut &amp; Styling Sanitary Trim" xml:space="preserve">
+    <value>Haircut &amp; Styling Sanitary Trim</value>
+  </data>
+  <data name="Full Grooming" xml:space="preserve">
+    <value>Full Grooming</value>
+  </data>
+  <data name="Complete grooming package including bath, haircut, styling, and all basic services for a fresh, clean look." xml:space="preserve">
+    <value>Complete grooming package including bath, haircut, styling, and all basic services for a fresh, clean look.</value>
+  </data>
+  <data name="Medicated Bath" xml:space="preserve">
+    <value>Medicated Bath</value>
+  </data>
+  <data name="Special treatment for dogs with skin conditions, allergies, or other dermatological issues. " xml:space="preserve">
+    <value>Special treatment for dogs with skin conditions, allergies, or other dermatological issues.</value>
+  </data>
+  <data name="Medicated Shampoo" xml:space="preserve">
+    <value>Medicated Shampoo</value>
+  </data>
+  <data name="Skin Assessment" xml:space="preserve">
+    <value>Skin Assessment</value>
+  </data>
+  <data name="Extended Soaking Time" xml:space="preserve">
+    <value>Extended Soaking Time</value>
+  </data>
+  <data name="Gentle Drying Process" xml:space="preserve">
+    <value>Gentle Drying Process</value>
+  </data>
+  <data name="Skin Moisturizing Treatment" xml:space="preserve">
+    <value>Skin Moisturizing Treatment</value>
+  </data>
+  <data name="Premium Spa Package" xml:space="preserve">
+    <value>Premium Spa Package</value>
+  </data>
+  <data name="Luxury treatment for your pet with premium products, special treatments, and extra pampering." xml:space="preserve">
+    <value>Luxury treatment for your pet with premium products, special treatments, and extra pampering.</value>
+  </data>
+  <data name="Luxury Shampoo &amp; Conditioner" xml:space="preserve">
+    <value>Luxury Shampoo &amp; Conditioner</value>
+  </data>
+  <data name="Paw Moisturizing Treatment" xml:space="preserve">
+    <value>Paw Moisturizing Treatment</value>
+  </data>
+  <data name="Facial Scrub" xml:space="preserve">
+    <value>Facial Scrub</value>
+  </data>
+  <data name="Pet-Safe Cologne" xml:space="preserve">
+    <value>Pet-Safe Cologne</value>
+  </data>
+  <data name="Decorative Bow or Bandana" xml:space="preserve">
+    <value>Decorative Bow or Bandana</value>
+  </data>
+  <data name="My Appointments" xml:space="preserve">
+    <value>My Appointments</value>
+  </data>
+  <data name="New Appointment" xml:space="preserve">
+    <value>New Appointment</value>
+  </data>
+  <data name="No appointments yet" xml:space="preserve">
+    <value>No appointments yet</value>
+  </data>
+  <data name="Book your first appointment to get started" xml:space="preserve">
+    <value>Book your first appointment to get started</value>
+  </data>
+  <data name="Upcoming Appointments" xml:space="preserve">
+    <value>Upcoming Appointments</value>
+  </data>
+  <data name="No Service/Package Selected" xml:space="preserve">
+    <value>No Service/Package Selected</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="PendingPayment" xml:space="preserve">
+    <value>PendingPayment</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Reschedule</value>
+  </data>
+  <data name="Are you sure you want to cancel this appointment?" xml:space="preserve">
+    <value>Are you sure you want to cancel this appointment?</value>
+  </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>Access Denied</value>
+  </data>
+  <data name="You are NOT AUTHORIZED to access the page" xml:space="preserve">
+    <value>You are NOT AUTHORIZED to access the page</value>
+  </data>
+  <data name="Please enter your current password and the new password you wish to set." xml:space="preserve">
+    <value>Please enter your current password and the new password you wish to set.</value>
+  </data>
+  <data name="Current Password" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="New Password" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="Please enter your current password and the new password you wish to set. Make sure to confirm the new password before submitting." xml:space="preserve">
+    <value>Please enter your current password and the new password you wish to set. Make sure to confirm the new password before submitting.</value>
+  </data>
+  <data name="No payments found." xml:space="preserve">
+    <value>No payments found.</value>
+  </data>
+  <data name="Payment Method" xml:space="preserve">
+    <value>Payment Method</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Payment Type" xml:space="preserve">
+    <value>Payment Type</value>
+  </data>
+  <data name="E-receipt" xml:space="preserve">
+    <value>E-receipt</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>Deposit</value>
+  </data>
+  <data name="Full Payment" xml:space="preserve">
+    <value>Full Payment</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="Add New Pet" xml:space="preserve">
+    <value>Add New Pet</value>
+  </data>
+  <data name="Provide a brief summary of the pet’s personality, behavior, and any special traits. This helps staff or adopters understand the pet better." xml:space="preserve">
+    <value>Provide a brief summary of the pet’s personality, behavior, and any special traits. This helps staff or adopters understand the pet better.</value>
+  </data>
+  <data name="Breed" xml:space="preserve">
+    <value>Breed</value>
+  </data>
+  <data name="Age" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Weight</value>
+  </data>
+  <data name="Medical Notes" xml:space="preserve">
+    <value>Medical Notes</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Back to Pets" xml:space="preserve">
+    <value>Back to Pets</value>
+  </data>
+  <data name="My Pets" xml:space="preserve">
+    <value>My Pets</value>
+  </data>
+  <data name="You don’t have any pets yet. Start by adding one!" xml:space="preserve">
+    <value>You don’t have any pets yet. Start by adding one!</value>
+  </data>
+  <data name="Add Your First Pet" xml:space="preserve">
+    <value>Add Your First Pet</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Edit Pet Information" xml:space="preserve">
+    <value>Edit Pet Information</value>
+  </data>
+  <data name="Save Changes" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+  <data name="Are you sure you want to delete" xml:space="preserve">
+    <value>Are you sure you want to delete</value>
+  </data>
+  <data name="This cannot be undone!" xml:space="preserve">
+    <value>This cannot be undone!</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>Pay</value>
+  </data>
+  <data name="Book Your Appointment" xml:space="preserve">
+    <value>Book Your Appointment</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Pet Info" xml:space="preserve">
+    <value>Pet Information</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Select Pet" xml:space="preserve">
+    <value>Select Pet</value>
+  </data>
+  <data name="Choose a pet" xml:space="preserve">
+    <value>Choose a pet</value>
+  </data>
+  <data name="No pet found. Please add a pet in your profile before booking." xml:space="preserve">
+    <value>No pet found. Please add a pet in your profile before booking.</value>
+  </data>
+  <data name="Owner Information" xml:space="preserve">
+    <value>Owner Information</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Please update your information in Update Profile." xml:space="preserve">
+    <value>Please update your information in "Update Profile".</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Confirm Appointment" xml:space="preserve">
+    <value>Confirm Appointment</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Deactivate" xml:space="preserve">
+    <value>Deactivate</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="Activate" xml:space="preserve">
+    <value>Activate</value>
+  </data>
+  <data name="First" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="Last" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="Admin Management" xml:space="preserve">
+    <value>Admin Management</value>
+  </data>
+  <data name="Package Maintenance" xml:space="preserve">
+    <value>Package Maintenance</value>
+  </data>
+  <data name="Service Maintenance" xml:space="preserve">
+    <value>Service Maintenance</value>
+  </data>
+  <data name="Appointment Maintenance" xml:space="preserve">
+    <value>Appointment Maintenance</value>
+  </data>
+  <data name="record(s)" xml:space="preserve">
+    <value>record(s)</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Insert</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>Features</value>
+  </data>
+  <data name="Existing Photos" xml:space="preserve">
+    <value>Existing Photos</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Update Service" xml:space="preserve">
+    <value>Update Service</value>
+  </data>
+  <data name="Please update service information below." xml:space="preserve">
+    <value>Please update service information below.</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Login History</value>
+  </data>
+</root>

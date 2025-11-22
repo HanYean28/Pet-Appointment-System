@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Secret Temporary Login";
+}
+<form id="tempLoginForm" class="form" onsubmit="return tempLogin(event)">
+    <h2 class="section-title">Secret Temporary Login</h2>
+    <label">Enter Key:</label>
+    <input type="password" id="keyInput" required />
+
+    <br /><br />
+    <label>Login as:</label>
+    <select id="roleSelect" required>
+        <option value="Member">Member</option>
+        <option value="Admin">Admin</option>
+    </select>
+
+    <br /><br />
+    <!-- Regulation/Rules Section -->
+    <div class="rules-box">
+        <b>Temporary Login Rules & Regulations</b>
+        <ol>
+            <li>Temporary accounts are for testing or demonstration purposes only. Do not use them for real data or sensitive information.</li>
+            <li>All activities within the account are monitored and logged.</li>
+            <li>Do not share your temporary token with others.</li>
+            <li>Temporary accounts will automatically expire 1 hour after creation. Any data or settings will be deleted after expiration.</li>
+            <li>Features or actions may be limited for testing purposes. Some functionalities may not be fully available.</li>
+            <li>Do not use this account for any illegal activities.</li>
+            <li>By using a temporary account, you acknowledge and accept these terms and conditions.</li>
+        </ol>
+    </div>
+    <div class="mb-3" style="display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="acceptRules" required style="margin:0;" />
+        <label for="acceptRules" style="user-select:none; margin:0;">
+            I have read and accept the rules and regulations above.
+        </label>
+    </div>
+
+    <br />
+
+    <button class="btn btn-primary" type="submit">Generate Token</button>
+    <a href="/Account/TempToken" class="btn btn-primary">Use Temporary Token</a>
+</form>
+
+<div id="result" style="margin-top:1em; color: green;"></div>
+<script>
+    function tempLogin(event) {
+        event.preventDefault();
+        // HTML 'required' attribute already ensures checkbox is ticked
+        const key = document.getElementById('keyInput').value;
+        const role = document.getElementById('roleSelect').value;
+
+        fetch('/api/account/temp-login', {
+            method: 'POST',
+            headers: {
+                'X-Temp-Login-Token': key,
+                'X-Temp-Login-Role': role
+            }
+        })
+        .then(async res => {
+            if (!res.ok) {
+                const msg = await res.text();
+                document.getElementById('result').style.color = 'red';
+                document.getElementById('result').textContent = msg;
+            } else {
+                const data = await res.json();
+                document.getElementById('result').style.color = 'green';
+                document.getElementById('result').textContent =
+                    "Success! Token: " + data.token + " (Role: " + data.user.role + ")";
+            }
+        })
+        .catch(err => {
+            document.getElementById('result').style.color = 'red';
+            document.getElementById('result').textContent = 'Error: ' + err;
+        });
+        return false;
+    }
+</script>

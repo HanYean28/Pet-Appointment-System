@@ -1,0 +1,210 @@
+﻿@model PawfectGrooming.Models.Package
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+
+@{
+    ViewBag.Title = "Package Maintenance | Insert Package";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string ResolveImage(string img) => Url.Content("~/images/photo.jpg");
+
+}
+
+<form class="form" method="post" enctype="multipart/form-data">
+    <table class="table">
+        <h1 class="section-title">Insert Package</h1>
+        <p class="form-description">
+            Please insert package information below.
+        </p>
+        <div class="form-group">
+            <label asp-for="Id"></label>
+            <b>@Model.Id</b>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" autofocus>
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" autofocus>
+            <span asp-validation-for="Description"></span>
+        </div>
+        <div class="form-group">
+
+            <label asp-for="Features"></label>
+            <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;">
+                <input type="text" id="newFeature" placeholder="Enter one feature" class="form-input" />
+                <button type="button" id="addFeatureBtn" class="btn">Add</button>
+            </div>
+
+            <ul id="featuresList" class="service-card-features">
+                @* Render each feature as an editable input named "Features" so model binding binds the array on post.
+                   Using inputs (not hidden) allows updating items before submit. *@
+                @if (Model?.Features != null)
+                {
+                    foreach (var f in Model.Features)
+                    {
+                        <li>
+                            <input type="text" name="Features" value="@f" class="form-input feature-input" />
+                            <button type="button" class="remove-feature btn" style="margin-left:.6rem;">Remove</button>
+                        </li>
+                    }
+                }
+            </ul>
+            <span asp-validation-for="Features" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price"></label>
+            <input asp-for="Price" pattern="^\d+(\.\d{1,2})?$" title="e.g. 12.50" data-trim>
+            <span asp-validation-for="Price"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PetType"></label>
+            <select asp-for="PetType" asp-items="ViewBag.PetTypes" class="form-input">
+                <option value="">-- choose pet type --</option>
+            </select>
+            <span asp-validation-for="PetType" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>@Localizer["Photos"]</label>
+            <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;">
+                <button type="button" id="selectPhotosBtn" class="btn">Select Photos</button>
+                <small class="text-muted">You may select multiple images (JPEG/PNG)</small>
+            </div>
+            <input type="file" name="Photos" id="photosInput" accept="image/jpeg,image/png" multiple hidden>
+            <div id="photosPreview" class="form-images" aria-live="polite"></div>
+            <br>
+            <span asp-validation-for="ImageURL"></span>
+            <input type="hidden" name="CroppedPhoto" id="CroppedPhoto" />
+        </div>
+        <!-- prompt out for image processing(hidden) -->
+        <div id="cropModal" class="crop-modal">
+            <div class="crop-modal-content">
+                <img id="cropImage" class="crop-image" />
+                <!-- Flip and Rotate Controls -->
+                <div class="crop-controls">
+                    <button type="button" id="rotateLeftBtn" class="btn-secondary">⟲ Rotate Left</button>
+                    <button type="button" id="rotateRightBtn" class="btn-secondary">⟳ Rotate Right</button>
+                    <button type="button" id="flipHorizontalBtn" class="btn-secondary">⇋ Flip Horizontal</button>
+                    <button type="button" id="flipVerticalBtn" class="btn-secondary">⇵ Flip Vertical</button>
+                </div>
+                <div class="crop-actions">
+                    <button type="button" id="cropBtn" class="btn-primary">Crop & Save</button>
+                    <button type="button" id="skipCropBtn" class="btn-secondary">Skip Cropping</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Insert</button>
+            <button class="btn-secondary" type="reset">Reset</button>
+        </div>
+    </table>
+</form>
+
+@section foot {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addBtn = document.getElementById('addFeatureBtn');
+            const newFeature = document.getElementById('newFeature');
+            const list = document.getElementById('featuresList');
+
+            function createFeatureItem(value) {
+                const li = document.createElement('li');
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'Features';
+                input.value = value;
+                input.className = 'form-input feature-input';
+                li.appendChild(input);
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'remove-feature btn';
+                btn.style.marginLeft = '.6rem';
+                btn.textContent = 'Remove';
+                btn.addEventListener('click', function () { li.remove(); });
+
+                li.appendChild(btn);
+                return li;
+            }
+
+            addBtn.addEventListener('click', function () {
+                const val = newFeature.value.trim();
+                if (!val) {
+                    newFeature.focus();
+                    return;
+                }
+                list.appendChild(createFeatureItem(val));
+                newFeature.value = '';
+                newFeature.focus();
+            });
+
+            // Delegate remove clicks for existing and future buttons
+            list.addEventListener('click', function (e) {
+                if (e.target && e.target.classList.contains('remove-feature')) {
+                    const li = e.target.closest('li');
+                    if (li) li.remove();
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('selectPhotosBtn');
+            const input = document.getElementById('photosInput');
+            const preview = document.getElementById('photosPreview');
+            const dt = new DataTransfer();
+
+            btn.addEventListener('click', () => input.click());
+
+            function render() {
+                preview.innerHTML = '';
+                Array.from(dt.files).forEach((file, idx) => {
+                    const el = document.createElement('div');
+                    el.className = 'form-images-item';
+                    el.style = 'display:inline-block;margin:6px;text-align:center;';
+                    const img = document.createElement('img');
+                    img.style = 'width:100px;height:100px;object-fit:cover;border-radius:6px;display:block';
+                    img.src = URL.createObjectURL(file);
+                    const lbl = document.createElement('div');
+                    lbl.textContent = file.name;
+                    const rm = document.createElement('button');
+                    rm.type = 'button';
+                    rm.className = 'btn';
+                    rm.textContent = 'Remove';
+                    rm.addEventListener('click', () => {
+                        const newDt = new DataTransfer();
+                        Array.from(dt.files).forEach((f, i) => { if (i !== idx) newDt.items.add(f); });
+                        // replace dt contents
+                        while (dt.items.length) dt.items.remove(0);
+                        Array.from(newDt.files).forEach(f => dt.items.add(f));
+                        input.files = dt.files;
+                        render();
+                    });
+                    el.appendChild(img);
+                    el.appendChild(lbl);
+                    el.appendChild(rm);
+                    preview.appendChild(el);
+                });
+            }
+
+            input.addEventListener('change', (e) => {
+                // add new files to dt (avoid duplicates by name+size)
+                Array.from(e.target.files).forEach(f => {
+                    const exists = Array.from(dt.files).some(x => x.name === f.name && x.size === f.size);
+                    if (!exists) dt.items.add(f);
+                });
+                input.files = dt.files;
+                render();
+            });
+        });
+    </script>
+}
+

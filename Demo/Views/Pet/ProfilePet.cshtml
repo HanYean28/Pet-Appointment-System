@@ -1,0 +1,56 @@
+﻿@model IEnumerable<PawfectGrooming.Models.Pets>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewData["Title"] = "My Pets";
+}
+
+<div class="container">
+
+    <div class="pet-header">
+        <h2>🐾 @Localizer["My Pets"]</h2>
+        <a asp-action="CreatePet" class="btn-primary">+ @Localizer["Add New Pet"]</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="no-pets">
+            <img src="~/images/dogpfp.png" alt="No Pets" width="120" />
+            <p>@Localizer["You don’t have any pets yet. Start by adding one!"]</p>
+            <a asp-action="CreatePet" class="btn-primary">@Localizer["Add Your First Pet"]</a>
+        </div>
+    }
+    else
+    {
+        <div class="pet-list">
+            @foreach (var pet in Model)
+            {
+                <div class="pet-profile">
+                    <div class="pet-card">
+                        <img src="~/images/Pet_Images/@pet.Photo" alt="@pet.Name" class="pet-photo" />
+                        <h5>@pet.Name</h5>
+                        <div class="pet-species">
+                            <strong>@Localizer["Pet Type"]:</strong> @Localizer[@pet.PetType]<br>
+							<strong>@Localizer["Breed"]:</strong> @pet.Breed
+                        </div>
+                        <div class="pet-actions mt-3">
+                            <a asp-action="PetDetails" asp-route-id="@pet.PetId" class="btn btn-outline-primary btn-sm" title="View Details">
+                                <i class="bi bi-info-circle"></i> @Localizer["Details"]
+                            </a>
+                            <a asp-action="UpdatePetInfo" asp-route-id="@pet.PetId" class="btn btn-outline-warning btn-sm" title="Edit Pet">
+                                <i class="bi bi-pencil-fill"></i> @Localizer["Edit"]
+                            </a>
+                            <form asp-action="DeletePet" asp-route-id="@pet.PetId" method="post" class="d-inline" onsubmit="return confirm('@Localizer["Are you sure you want to delete"] @pet.Name? @Localizer["This cannot be undone!"]');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                    <i class="bi bi-trash"></i> @Localizer["Delete"]
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

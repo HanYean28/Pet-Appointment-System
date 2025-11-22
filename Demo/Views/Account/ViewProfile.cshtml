@@ -1,0 +1,22 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = "My Profile";
+}
+<h1 class="section-title">@Localizer["My Profile"]</h1>
+<div class="profile-container">
+    <div class="profile-header">
+        <img src="~/images/User_Images/@Model.PhotoURL" alt="Profile Photo" class="profile-photo" />
+        <h2>@Model.Name</h2>
+        <p>@Localizer[@Model.Role]</p>
+    </div>
+
+    <ul class="profile-info">
+        <li><strong>@Localizer["Email"]:</strong> @Model.Email</li>
+        <li><strong>@Localizer["Phone Number"]:</strong> @Model.PhoneNumber</li>
+        <li><strong>@Localizer["Gender"]:</strong> @Model.Gender</li>
+    </ul>
+
+    <a class="btn-primary" href="@Url.Action("UpdateProfile")">@Localizer["Edit Profile"]</a>
+</div>

@@ -1,0 +1,52 @@
+@model PawfectGrooming.Models.Booking
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@{
+    ViewBag.Title = Localizer["Book Appointment"];
+    var step = 1;
+    string min = DateTime.Today.ToString("yyyy-MM-dd");//Set min limit cannot pick date from past
+    string max = DateTime.Today.AddMonths(12).ToString("yyyy-MM-dd");//Set max limit for date picker
+}
+<section class="booking-section">
+    <h1 class="section-title">@Localizer["Book Your Appointment"]</h1>
+    <div class="booking-card">
+        <partial name="_BookingSteps" model="step" />
+        <form asp-action="BookStep1" method="post" class="booking-content">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="hidden" name="ServiceId" value="@Model.ServiceId" />
+            <input type="hidden" name="PackageId" value="@Model.PackageId" />
+            <input type="hidden" name="appointmentId" value="@(Model.Id != 0 ? Model.Id : ViewBag.AppointmentId)" />
+            <div class="form-grid">
+                <div class="form-section">
+                    <div class="booking-label">@Localizer["Select"]@Localizer["Date"] &amp; @Localizer["Time"]</div>
+                    <div class="grid-row">
+                        <div class="grid-col">
+                            <label class="form-label">@Localizer["Select"]@Localizer["Date"]</label>
+                            <input type="date" name="Date"
+                                   value="@(Model.Date != DateTime.MinValue ? Model.Date.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))"
+                                   min="@min" max="@max" required class="form-input" />
+                        </div>
+                        <div class="grid-col">
+                            <label class="form-label">@Localizer["Select"]@Localizer["Time"]</label>
+                            <div class="time-grid">
+                                @foreach (var time in new[] { "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+                                                                "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM" })
+                                {
+                                    <label class="time-slot @(Model.Time == time ? "time-slot--active" : "")">
+                                        <input type="radio" name="Time" value="@time" @(Model.Time == time ? "checked" : null) required />
+                                        <span>@time</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="booking-actions">
+                <button type="submit" class="btn btn-next">@Localizer["Next"]</button>
+            </div>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,264 @@
+﻿@model PawfectGrooming.Models.Booking
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+
+@{
+    ViewBag.Title = "Appointment Maintenance - Update Appointment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<h2>@Localizer["Update Appointment"]</h2>
+<p>@Localizer["Please update appointment information below."]</p>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>@Localizer["Please fix the following errors:"]</strong>
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @Html.Raw(TempData["Error"])
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Info"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-action="UpdateAppointment" method="post" novalidate>
+    @Html.HiddenFor(m => m.Id)
+
+    <table class="table table-bordered">
+        <tr>
+            <th>@Localizer["Email"]</th>
+            <td>
+                @Html.TextBoxFor(m => m.UserEmail, new { @class = "form-control", type = "email", placeholder = "user@example.com", @readonly = "readonly" })
+                @* @Html.ValidationMessageFor(m => m.UserEmail, "", new { @class = "text-danger" }) *@
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Date"]</th>
+            <td>
+                @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new {
+                @class = "form-control",
+                                type = "date",
+                                min = DateTime.Today.ToString("yyyy-MM-dd")
+                                })
+                @* @Html.ValidationMessageFor(m => m.Date, "", new { @class = "text-danger" }) *@
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Time"]</th>
+            <td>
+                @{
+                    var timeSlots = new[] { "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+                            "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM" };
+                    var selectedTime = Model.Time as string;
+                }
+                <div class="form-group">
+                    <select asp-for="Time" class="form-control" required>
+                        @foreach (var time in timeSlots)
+                        {
+                            <option value="@time" selected="@(selectedTime == time ? "selected" : null)">@time</option>
+                        }
+                    </select>
+                </div>
+                @* @Html.ValidationMessageFor(m => m.Time, "", new { @class = "text-danger" }) *@
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Pet Name"]</th>
+            <td>
+                @Html.DropDownListFor(m => m.PetId, ViewBag.PetOptions as List<SelectListItem>, "-- Select Pet --", new { @class = "form-control", id = "PetId" })
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Service"]</th>
+            <td>
+                <select id="ServiceId" name="ServiceId" class="form-control">
+                    <option value="">-- Select Service --</option>
+                    @foreach (var s in ViewBag.ServiceOptions as List<PawfectGrooming.Models.ServiceOption>)
+                    {
+                        <option value="@s.Id" data-pettype="@s.PetType" data-price="@s.Price" selected="@(Model.ServiceId == s.Id ? "selected" : null)">@s.Name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Package"]</th>
+            <td>
+                <select id="PackageId" name="PackageId" class="form-control">
+                    <option value="">-- Select Package --</option>
+                    @foreach (var p in ViewBag.PackageOptions as List<PawfectGrooming.Models.Package>)
+                    {
+                        <option value="@p.Id" data-pettype="@p.PetType" data-price="@p.Price" selected="@(Model.PackageId == p.Id ? "selected" : null)">@p.Name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Price"]</th>
+            <td>
+                @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number", step = "0.01", id = "Price", @readonly = "readonly" })            
+            </td>
+        </tr>
+        <tr>
+            <th>@Localizer["Status"]</th>
+            <td>
+                <div class="form-check">
+                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input", id = "IsActive" })
+                    <label class="form-check-label" for="IsActive" id="statusLabel">
+                        @(Model.IsActive ? Localizer["Active"] : Localizer["Inactive"])
+                    </label>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="form-actions d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> @Localizer["Update"]
+        </button>
+        <button type="reset" class="btn btn-primary">
+            <i class="fas fa-undo"></i> @Localizer["Reset"]
+        </button>
+        <a asp-controller="Admin" asp-action="AppointmentMaintenance" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> @Localizer["Cancel"]
+        </a>
+    </div>
+</form>
+
+<!-- Toast container for notifications -->
+<div aria-live="polite" aria-atomic="true" style="position: fixed; top: 1rem; right: 1rem; z-index: 1050;">
+    <div id="toast-container"></div>
+</div>
+@section Scripts {
+    <script>
+    function toggleServicePackage() {
+        var service = document.getElementById("ServiceId");
+        var package = document.getElementById("PackageId");
+        package.disabled = service.value ? true : false;
+        service.disabled = package.value ? true : false;
+    }
+
+    function updatePetDropdown() {
+    var service = document.getElementById("ServiceId");
+    var package = document.getElementById("PackageId");
+    var petDropdown = document.getElementById("PetId");
+    var userEmail = document.getElementById("UserEmail").value;
+    var currentPetId = "@Model.PetId";
+    var currentPetName = "@Model.Pet?.Name";
+
+    let petType = "";
+    let isPackage = false;
+    if (service.value) {
+        petType = service.options[service.selectedIndex].getAttribute("data-pettype");
+    } else if (package.value) {
+        isPackage = true;
+    }
+
+    petDropdown.disabled = false;
+
+    if (userEmail) {
+        let url;
+        if (isPackage) {
+            url = `/Admin/GetPetsForUserAndType?email=${encodeURIComponent(userEmail)}&petType=All`;
+        } else if (petType) {
+            url = `/Admin/GetPetsForUserAndType?email=${encodeURIComponent(userEmail)}&petType=${encodeURIComponent(petType)}`;
+        } else {
+            petDropdown.innerHTML = "";
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "-- Select Pet --";
+            petDropdown.appendChild(defaultOption);
+            return;
+        }
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                petDropdown.innerHTML = "";
+                var defaultOption = document.createElement("option");
+                defaultOption.value = "";
+                defaultOption.text = "-- Select Pet --";
+                petDropdown.appendChild(defaultOption);
+
+                data.forEach(function(pet) {
+                    var option = document.createElement("option");
+                    option.value = pet.value;
+                    option.text = pet.text;
+                    if (pet.value == currentPetId) {
+                        option.selected = true;
+                    }
+                    petDropdown.appendChild(option);
+                });
+            });
+    }
+}
+
+    function updatePrice() {
+    var service = document.getElementById("ServiceId");
+    var package = document.getElementById("PackageId");
+    var priceInput = document.getElementById("Price");
+
+    let price = "";
+    if (!service.disabled && service.value) {
+        price = service.options[service.selectedIndex].getAttribute("data-price");
+    } else if (!package.disabled && package.value) {
+        price = package.options[package.selectedIndex].getAttribute("data-price");
+    }
+    priceInput.value = price || "";
+}
+
+    // Update both price and pet dropdown when selection changes
+    document.addEventListener("DOMContentLoaded", function () {
+        var service = document.getElementById("ServiceId");
+        var package = document.getElementById("PackageId");
+        if (service && package) {
+            service.addEventListener("change", function() {
+                toggleServicePackage();
+                updatePetDropdown();
+                updatePrice();
+            });
+            package.addEventListener("change", function() {
+                toggleServicePackage();
+                updatePetDropdown();
+                updatePrice();
+            });
+            toggleServicePackage();
+            updatePetDropdown();
+            updatePrice();
+        }
+    });
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var checkbox = document.getElementById("IsActive");
+        var label = document.getElementById("statusLabel");
+        var activeText = "@Localizer["Active"]";
+        var inactiveText = "@Localizer["Inactive"]";
+        function updateLabel() {
+            label.textContent = checkbox.checked ? activeText : inactiveText;
+        }
+        checkbox.addEventListener("change", updateLabel);
+        updateLabel();
+    });
+    </script>
+}

@@ -1,0 +1,15 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+@model int
+<div class="booking-steps">
+    <div class="step @(Model == 1 ? "step--active" : "")">
+        <span>1</span><div>@Localizer["Date"] &amp; @Localizer["Time"]</div>
+    </div>
+    <div class="step @(Model == 2 ? "step--active" : "")">
+        <span>2</span><div>@Localizer["Pet Info"]</div>
+    </div>
+    <div class="step @(Model == 3 ? "step--active" : "")">
+        <span>3</span><div>@Localizer["Confirm"]</div>
+    </div>
+</div>

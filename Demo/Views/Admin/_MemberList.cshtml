@@ -1,0 +1,100 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<User>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    // Only include the fields you want to allow sorting on
+    string[] fields = [@Localizer["Name"], @Localizer["Email"], @Localizer["Gender"]];
+}
+
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+
+<p>
+    @Model.Count() of @Model.TotalItemCount @Localizer["record(s)"] |
+    @Localizer["Page"] @Model.PageNumber of @Model.PageCount
+</p>
+
+<table class="table">
+    <tr>
+        @foreach (var f in fields)
+        {
+            string d = "asc";
+            string c = "";
+            string arrow = "";
+
+            if (f == ViewBag.Sort)
+            {
+                d = ViewBag.Dir == "des" ? "asc" : "des";
+                c = ViewBag.Dir;
+                arrow = ViewBag.Dir == "asc" ? "▲" : "▼";
+            }
+
+            <th>
+                <a data-ajax="true"
+                   data-ajax-update="#target"
+                   data-ajax-loading="#loader"
+                   href="?name=@ViewBag.Name&sort=@f&dir=@d"
+                   class="@c">@f @arrow</a>
+            </th>
+        }
+        <th>@Localizer["Photo"]</th>
+        <th>@Localizer["Status"]</th>
+        <th>@Localizer["Actions"]</th>
+    </tr>
+
+
+
+    @foreach (var s in Model)
+    {
+        <tr>
+            <td>@s.Name</td>
+            <td>@s.Email</td>
+            <td>@Localizer[@s.Gender]</td>
+            <td><img src="~/images/User_Images/@s.PhotoURL" alt="Profile" style="max-height:48px;" /></td>
+            <td>
+                @if (s.IsActive)
+                {
+                    <span class="badge badge--success">@Localizer["Active"]</span>
+                }
+                else
+                {
+                    <span class="badge badge--danger">@Localizer["Deactivated"]</span>
+                }
+            </td>
+            <td>
+                <form asp-controller="Admin" asp-action="ToggleUserStatus" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="email" value="@s.Email" />
+                    <button type="submit" class="btn">
+                        @Localizer[s.IsActive ? "Deactivate" : "Activate"]
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = @Localizer["First"];
+    options.LinkToLastPageFormat = @Localizer["Last"];
+    options.LinkToPreviousPageFormat = @Localizer["Previous"];
+    options.LinkToNextPageFormat = @Localizer["Next"];
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+Model,
+p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

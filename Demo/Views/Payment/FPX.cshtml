@@ -1,0 +1,415 @@
+﻿@model PawfectGrooming.Models.Payment
+@inject Microsoft.Extensions.Options.IOptions<PawfectGrooming.StripeSettings> Stripe
+
+@{
+    ViewBag.Title = "Stripe Payment";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Secure Payment with Stripe</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-shield-alt"></i>
+                        Your payment information is secure and encrypted by Stripe.
+                    </div>
+
+                    <form id="payment-form">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label for="card-element" class="form-label">Card Information</label>
+                            <div id="card-element" class="form-control" style="height: 40px; padding: 10px;">
+                                <!-- Stripe Elements will create form elements here -->
+                            </div>
+                            <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control" placeholder="your@gmail.com" required>
+                            <div id="email-errors" class="text-danger mt-1"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Cardholder Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+                            <div id="name-errors" class="text-danger mt-1"></div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button id="submit-payment" class="btn btn-primary btn-lg">
+                                <span id="button-text">Pay Now</span>
+                                <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-lock"></i>
+                            Powered by Stripe • Secure SSL encryption
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        console.log('Script started');
+        
+        // Check if Stripe key is configured
+        const publishableKey = "@Stripe.Value.PublishableKey";
+        console.log('Stripe Publishable Key:', publishableKey);
+        
+        let stripe, elements, cardElement;
+        
+        // Initialize Stripe if key is available
+        if (publishableKey && !publishableKey.includes('EXAMPLE') && !publishableKey.includes('YOUR_REAL')) {
+            try {
+                stripe = Stripe(publishableKey);
+                elements = stripe.elements();
+                
+                // Create card element
+                cardElement = elements.create('card', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#424770',
+                            '::placeholder': {
+                                color: '#aab7c4',
+                            },
+                        },
+                        invalid: {
+                            color: '#9e2146',
+                        },
+                    },
+                });
+
+                cardElement.mount('#card-element');
+
+                // Handle real-time validation errors from the card Element
+                cardElement.on('change', function(event) {
+                    const displayError = document.getElementById('card-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                    } else {
+                        displayError.textContent = '';
+                    }
+                });
+                
+                console.log('Stripe initialized successfully');
+            } catch (error) {
+                console.error('Stripe initialization error:', error);
+                document.getElementById('card-errors').textContent = 'Stripe initialization failed: ' + error.message;
+            }
+        } else {
+            console.warn('Stripe Publishable Key is not configured properly');
+            document.getElementById('card-errors').textContent = 'Stripe not configured. Using fallback payment method.';
+            
+            // Create a simple fallback form with validation
+            const cardElementDiv = document.getElementById('card-element');
+            cardElementDiv.innerHTML = `
+                <div class="form-control" style="height: 40px; padding: 10px;">
+                    <input type="text" placeholder="Card Number (e.g., 4242 4242 4242 4242)" 
+                           style="border: none; width: 100%; height: 100%;" 
+                           id="fallback-card" 
+                           maxlength="19" 
+                           pattern="[0-9\\s]{13,19}"
+                           title="Please enter a valid 16-digit card number">
+                </div>
+            `;
+            
+            // Add real-time validation for fallback card input
+            const fallbackCardInput = document.getElementById('fallback-card');
+            fallbackCardInput.addEventListener('input', function(e) {
+                // Remove any non-digit characters
+                let value = e.target.value.replace(/\D/g, '');
+                
+                // Add spaces every 4 digits
+                value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                
+                // Limit to 16 digits
+                if (value.replace(/\s/g, '').length > 16) {
+                    value = value.replace(/\s/g, '').substring(0, 16);
+                    value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                }
+                
+                e.target.value = value;
+                
+                // Validate card number
+                const cardNumber = value.replace(/\s/g, '');
+                const displayError = document.getElementById('card-errors');
+                
+                if (cardNumber.length === 16) {
+                    displayError.textContent = '';
+                    e.target.style.borderColor = '#28a745'; // Green border
+                } else if (cardNumber.length > 0) {
+                    displayError.textContent = `Please enter a valid 16-digit card number (${cardNumber.length}/16 digits)`;
+                    e.target.style.borderColor = '#dc3545'; // Red border
+                } else {
+                    displayError.textContent = '';
+                    e.target.style.borderColor = '#ced4da'; // Default border
+                }
+            });
+            
+            // Add real-time validation for email (Gmail only)
+            const emailInput = document.getElementById('email');
+            emailInput.addEventListener('input', function(e) {
+                const email = e.target.value;
+                const emailErrors = document.getElementById('email-errors');
+                const gmailSuffix = String.fromCharCode(64) + 'gmail.com';
+                
+                if (email && !email.endsWith(gmailSuffix)) {
+                    emailErrors.textContent = 'Please enter a valid Gmail address (' + gmailSuffix + ')';
+                    e.target.style.borderColor = '#dc3545';
+                } else {
+                    emailErrors.textContent = '';
+                    e.target.style.borderColor = '#ced4da';
+                }
+            });
+            
+            // Add real-time validation for name
+            const nameInput = document.getElementById('name');
+            nameInput.addEventListener('input', function(e) {
+                const name = e.target.value.trim();
+                const nameErrors = document.getElementById('name-errors');
+                
+                if (name && name.length < 2) {
+                    nameErrors.textContent = 'Name must be at least 2 characters';
+                    e.target.style.borderColor = '#dc3545';
+                } else {
+                    nameErrors.textContent = '';
+                    e.target.style.borderColor = '#ced4da';
+                }
+            });
+        }
+
+        // Handle form submission - this will always work regardless of Stripe status
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            console.log('Form submission started');
+
+            const submitButton = document.getElementById('submit-payment');
+            const buttonText = document.getElementById('button-text');
+            const spinner = document.getElementById('spinner');
+
+            // Disable submit button and show spinner
+            submitButton.disabled = true;
+            buttonText.textContent = 'Processing...';
+            spinner.classList.remove('d-none');
+
+            try {
+                // Check if Stripe is available
+                if (!stripe || !cardElement) {
+                    console.log('Using fallback payment method');
+                    await processFallbackPayment();
+                    return;
+                }
+
+                // Create payment intent
+                console.log('Creating payment intent...');
+                const response = await fetch('/Payment/CreatePaymentIntent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: JSON.stringify({
+                        bookingId: @Html.Raw(Json.Serialize(Model.BookingId)),
+                        paymentType: @Html.Raw(Json.Serialize(Model.PaymentType))
+                    })
+                });
+
+                const { clientSecret, error } = await response.json();
+                console.log('Payment intent response:', { clientSecret: clientSecret ? 'received' : 'none', error });
+
+                if (error) {
+                    throw new Error(error);
+                }
+
+                // Confirm payment with Stripe
+                console.log('Confirming payment with Stripe...');
+                const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: document.getElementById('name').value,
+                            email: document.getElementById('email').value,
+                        },
+                    }
+                });
+
+                if (stripeError) {
+                    throw new Error(stripeError.message);
+                }
+
+                // Payment succeeded
+                if (paymentIntent.status === 'succeeded') {
+                    console.log('Payment succeeded, confirming on server...');
+                    // Confirm payment on server
+                    const confirmResponse = await fetch(`/Payment/ConfirmPayment?paymentIntentId=${paymentIntent.id}&bookingId=@Html.Raw(Json.Serialize(Model.BookingId))&paymentType=@Html.Raw(Json.Serialize(Model.PaymentType))`, {
+                        method: 'POST',
+                        headers: {
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        }
+                    });
+
+                    const confirmResult = await confirmResponse.json();
+                    console.log('Server confirmation result:', confirmResult);
+
+                    if (confirmResult.success) {
+                        console.log('Redirecting to confirmation page:', '/Payment/Confirmation/' + confirmResult.paymentId);
+                        // Redirect to confirmation page
+                        window.location.href = '/Payment/Confirmation/' + confirmResult.paymentId;
+                    } else {
+                        throw new Error(confirmResult.error || 'Payment confirmation failed');
+                    }
+                } else {
+                    throw new Error('Payment was not successful');
+                }
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                
+                // Show error message
+                const displayError = document.getElementById('card-errors');
+                displayError.textContent = error.message;
+                
+                // Re-enable submit button
+                submitButton.disabled = false;
+                buttonText.textContent = 'Pay Now';
+                spinner.classList.add('d-none');
+            }
+        });
+
+        // Fallback payment function for when Stripe is not configured
+        async function processFallbackPayment() {
+            try {
+                console.log('Processing fallback payment...');
+                
+                // Get card number from fallback input
+                const cardNumber = document.getElementById('fallback-card')?.value || '';
+                
+                // Validate card number
+                const cleanCardNumber = cardNumber.replace(/\s/g, '');
+                if (cleanCardNumber.length !== 16 || !/^\d{16}$/.test(cleanCardNumber)) {
+                    throw new Error('Please enter a valid 16-digit card number');
+                }
+                
+                
+                // Validate email (Gmail only)
+                const email = document.getElementById('email').value;
+                const gmailSuffix = String.fromCharCode(64) + 'gmail.com';
+                if (!email || !email.endsWith(gmailSuffix)) {
+                    throw new Error('Please enter a valid Gmail address (' + gmailSuffix + ')');
+                }
+                
+                // Validate name
+                const name = document.getElementById('name').value;
+                if (!name || name.trim().length < 2) {
+                    throw new Error('Please enter a valid cardholder name (at least 2 characters)');
+                }
+                
+                // Create a mock payment intent ID
+                const mockPaymentIntentId = 'pi_fallback_' + Date.now();
+                
+                // Call the ConfirmPayment endpoint directly with mock data
+                const confirmResponse = await fetch(`/Payment/ConfirmPayment?paymentIntentId=${mockPaymentIntentId}&bookingId=@Html.Raw(Json.Serialize(Model.BookingId))&paymentType=@Html.Raw(Json.Serialize(Model.PaymentType))`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                });
+
+                const confirmResult = await confirmResponse.json();
+                console.log('Fallback payment result:', confirmResult);
+
+                if (confirmResult.success) {
+                    console.log('Redirecting to confirmation page:', '/Payment/Confirmation/' + confirmResult.paymentId);
+                    window.location.href = '/Payment/Confirmation/' + confirmResult.paymentId;
+                } else {
+                    throw new Error(confirmResult.error || 'Fallback payment failed');
+                }
+                
+            } catch (error) {
+                console.error('Fallback payment error:', error);
+                throw error;
+            }
+        }
+        
+        console.log('Payment form initialized');
+    </script>
+
+    <style>
+        .card {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border: none;
+            max-width: 1200px; /* much wider */
+            width: 90%; /* center it with margin */
+            border-radius: 16px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem 2.5rem; /* more spacious */
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+
+        .alert-info {
+            background-color: #e3f2fd;
+            border-color: #bbdefb;
+            color: #1976d2;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        #card-element {
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 12px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+            #card-element:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+    </style>
+
+}

@@ -1,0 +1,35 @@
+﻿@model PawfectGrooming.Models.Pets
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Pet Details";
+}
+
+<div class="pet-details-container">
+    <div class="pet-details-header">
+        <h2>@Model.Name's @Localizer["Details"]</h2>
+    </div>
+
+    <div class="pet-details-content">
+        <div>
+            <img src="~/images/Pet_Images/@Model.Photo" alt="@Model.Name" class="pet-details-image" />
+        </div>
+
+        <div class="pet-details-info">
+            <ul class="pet-details-list">
+                <li><strong>@Localizer["Pet Type"]:</strong> @Model.PetType</li>
+				<li><strong>@Localizer["Breed"]:</strong> @Model.Breed</li>
+                <li><strong>@Localizer["Gender"]:</strong> @Localizer[@Model.Gender]</li>
+                <li><strong>@Localizer["Age"]:</strong> @Model.Age</li>
+                <li><strong>@Localizer["Weight"]:</strong> @Model.Weight kg</li>
+                <li><strong>@Localizer["Medical Notes"]:</strong> @Model.MedicalNotes</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <a asp-action="ProfilePet" class="back-button">← @Localizer["Back to Pets"]</a>
+    </div>
+</div>

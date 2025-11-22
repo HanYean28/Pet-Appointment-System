@@ -1,0 +1,384 @@
+﻿@model PawfectGrooming.Models.Payment
+@{
+    ViewBag.Title = "Payment Confirmation";
+}
+
+
+
+<div class="payment-page">
+    <div class="payment-container">
+        <div class="success-header">
+            <div class="success-icon"></div>
+            <h2>Payment Successful 🎉</h2>
+            <p class="subtitle">Your booking has been confirmed and payment processed successfully</p>
+        </div>
+
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="detail-label">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Payment ID References
+                </span>
+                <span class="detail-value">@Model.PaymentId</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4h3a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2h5z" />
+                    </svg>
+                    Booking ID
+                </span>
+                <span class="detail-value">@Model.BookingId</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Payment Method
+                </span>
+                <span class="detail-value">@Model.PaymentMethod</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Payment Type
+                </span>
+                <span class="detail-value">@Model.PaymentType</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4h3a2 2 0 012 2v11a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2h5z" />
+                    </svg>
+                    Date & Time
+                </span>
+                <span class="detail-value">@Model.Date.ToString("dd MMM yyyy hh:mm tt")</span>
+            </div>
+        </div>
+
+        <div style="text-align: right;">
+            <a asp-action="Index" asp-controller="Home" class="btn-home">
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .payment-page {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .payment-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.1), 0 16px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation-name: slideInUp;
+            animation-duration: 0.8s;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .payment-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #10b981, #059669, #047857);
+                animation-name: shimmer;
+                animation-duration: 2s;
+                animation-timing-function: ease-in-out;
+                animation-iteration-count: infinite;
+            }
+
+
+
+        .success-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation-name: fadeIn;
+            animation-duration: 1s;
+            animation-timing-function: ease-out;
+            animation-delay: 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 16px 32px rgba(16, 185, 129, 0.3);
+            animation-name: pulse;
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            position: relative;
+        }
+
+            .success-icon::before {
+                content: '✓';
+                font-size: 32px;
+                color: white;
+                font-weight: bold;
+            }
+
+            .success-icon::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                border: 2px solid rgba(16, 185, 129, 0.3);
+                animation-name: ripple;
+                animation-duration: 2s;
+                animation-timing-function: ease-out;
+                animation-iteration-count: infinite;
+            }
+
+
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        .payment-details {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.08));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            animation-name: fadeIn;
+            animation-duration: 1s;
+            animation-timing-function: ease-out;
+            animation-delay: 0.6s;
+            animation-fill-mode: both;
+            position: relative;
+        }
+
+            .payment-details::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.03), transparent);
+                border-radius: 16px;
+                pointer-events: none;
+            }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            .detail-row:last-child {
+                border-bottom: none;
+            }
+
+            .detail-row:hover {
+                background: rgba(16, 185, 129, 0.05);
+                margin: 0 -16px;
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+        .detail-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-value {
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 15px;
+            text-align: right;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            animation-name: glow;
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+
+        .btn-home {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation-name: fadeIn;
+            animation-duration: 1s;
+            animation-timing-function: ease-out;
+            animation-delay: 0.9s;
+            animation-fill-mode: both;
+        }
+
+            .btn-home::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn-home:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+            }
+
+                .btn-home:hover::before {
+                    left: 100%;
+                }
+
+            .btn-home:active {
+                transform: translateY(0);
+            }
+
+
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+        }
+
+        /* Mobile responsiveness */
+        .mobile-responsive {
+            padding: 32px 24px;
+            margin: 20px;
+        }
+
+        .mobile-title {
+            font-size: 28px;
+        }
+
+        .mobile-details {
+            padding: 24px 20px;
+        }
+
+        .mobile-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 12px 0;
+        }
+
+        .mobile-value {
+            text-align: left;
+        }
+
+        /* Additional premium touches */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation-duration: 6s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+            .floating-circle:nth-child(1) {
+                width: 100px;
+                height: 100px;
+                top: 10%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+
+            .floating-circle:nth-child(2) {
+                width: 60px;
+                height: 60px;
+                top: 60%;
+                right: 10%;
+                animation-delay: 2s;
+            }
+
+            .floating-circle:nth-child(3) {
+                width: 80px;
+                height: 80px;
+                bottom: 20%;
+                left: 20%;
+                animation-delay: 4s;
+            }
+    </style>

@@ -1,0 +1,51 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization
+
+@{
+    ViewBag.Title = "Login With Temporary Token";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form class="form" method="post" action="/Account/TempToken">
+    @Html.AntiForgeryToken()s
+    <h1 class="section-title">🔐 @Localizer["Login With Temporary Token"]</h1>
+    <p class="form-description">
+        @Localizer["Enter your temporary login token"]
+    </p>
+
+    <div class="form-group">
+        <label for="tempToken">@Localizer["Temporary Token"]</label>
+        <input type="text" id="tempToken" name="tempToken" placeholder="@Localizer["Paste your login token here..."]" required />
+        <small style="display:block; color:#6b7280; margin-top:6px;">
+            @Localizer["Please paste the complete token you received"]
+        </small>
+    </div>
+
+    <div class="form-actions">
+        <button class="btn-primary" type="submit">
+            <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+            @Localizer["Login"]
+        </button>
+    </div>
+
+    <div class="form-links">
+        <a href="/Account/Login">@Localizer["Back to Regular Login"]</a>
+    </div>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="error-message" style="max-width: 480px; margin: 20px auto; padding: 16px; background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626; text-align: center;">
+        <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+        @ViewBag.Error
+    </div>
+}
+
+@if (ViewBag.Success != null)
+{
+    <div class="success-message" style="max-width: 480px; margin: 20px auto; padding: 16px; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; color: #16a34a; text-align: center;">
+        <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+        @ViewBag.Success
+    </div>
+}

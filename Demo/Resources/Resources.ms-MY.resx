@@ -1,0 +1,873 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Email" xml:space="preserve">
+    <value>E-mel</value>
+  </data>
+  <data name="Login_Description" xml:space="preserve">
+    <value>Sila masukkan e-mel dan kata laluan anda untuk log masuk.</value>
+  </data>
+  <data name="New User" xml:space="preserve">
+    <value> Baru dengan Pawfect Grooming?</value>
+  </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>Ingat Saya</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log Masuk</value>
+  </data>
+  <data name="Forgot Password" xml:space="preserve">
+    <value>Lupa Kata Laluan</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Daftar</value>
+  </data>
+  <data name="Register_Description" xml:space="preserve">
+    <value>Sila isi borang di bawah untuk membuat akaun baharu.  Anda akan dapat log masuk dan mengurus profil anda</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Kosong</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Lelaki</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Perempuan</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Sahkan Kata Laluan</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Jantina</value>
+  </data>
+  <data name="Select Gender" xml:space="preserve">
+    <value>Pilih Jantina</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>Gambar</value>
+  </data>
+  <data name="Select Photo" xml:space="preserve">
+    <value>Pilih Gambar</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Kata Laluan</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>Tetapkan Kata Laluan Baharu</value>
+  </data>
+  <data name="New Password_Description" xml:space="preserve">
+    <value>Sila masukkan kata laluan baharu anda untuk menetapkan semula akaun anda.</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Kata Laluan Baharu</value>
+  </data>
+  <data name="Update Password" xml:space="preserve">
+    <value>Kemaskini Kata Laluan</value>
+  </data>
+  <data name="Return to Login" xml:space="preserve">
+    <value>Kembali ke Log Masuk</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Hantar </value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Reset Kata Laluan</value>
+  </data>
+  <data name="Reset Password_Description" xml:space="preserve">
+    <value>Sila masukkan alamat e-mel anda untuk menetapkan semula kata laluan.Anda akan menerima e-mel dengan arahan untuk mencipta kata laluan baharu.</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Laman Utama</value>
+  </data>
+  <data name="Services" xml:space="preserve">
+    <value>Perkhidmatan</value>
+  </data>
+  <data name="Appointments" xml:space="preserve">
+    <value>Temujanji</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Hubungi</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Ahli</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Pentadbir</value>
+  </data>
+  <data name="Update Profile" xml:space="preserve">
+    <value>Kemaskini Profil</value>
+  </data>
+  <data name="Product Maintenance" xml:space="preserve">
+    <value>Pengurusan Produk</value>
+  </data>
+  <data name="Category Maintenance" xml:space="preserve">
+    <value>Pengurusan Kategori</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Log Keluar</value>
+  </data>
+  <data name="Pet Profile" xml:space="preserve">
+    <value>Profil Haiwan</value>
+  </data>
+  <data name="TagLine" xml:space="preserve">
+    <value>Penjagaan dandanan untuk si bulu kesayangan.</value>
+  </data>
+  <data name="Newsletter Description" xml:space="preserve">
+    <value>Sertai surat berita kami untuk info dan petua berguna.</value>
+  </data>
+  <data name="Your Email" xml:space="preserve">
+    <value>Emel Anda</value>
+  </data>
+  <data name="Quick Links" xml:space="preserve">
+    <value>Pautan Pantas</value>
+  </data>
+  <data name="Login successfully." xml:space="preserve">
+    <value>Log masuk berjaya.</value>
+  </data>
+  <data name="Book Appointment" xml:space="preserve">
+    <value>Tempah Janji Temu</value>
+  </data>
+  <data name="Welcome to" xml:space="preserve">
+    <value>Selamat datang ke</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Bahasa</value>
+  </data>
+  <data name="Newsletter" xml:space="preserve">
+    <value>Surat Berita</value>
+  </data>
+  <data name="Contact Us" xml:space="preserve">
+    <value>Hubungi Kami</value>
+  </data>
+  <data name="Opening Hours" xml:space="preserve">
+    <value>Waktu Operasi</value>
+  </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Isnin</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Sabtu</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Ahad</value>
+  </data>
+  <data name="Payment History" xml:space="preserve">
+    <value>Sejarah Pembayaran</value>
+  </data>
+  <data name="Phone Number" xml:space="preserve">
+    <value>Nombor Telefon</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Alamat</value>
+  </data>
+  <data name="We look forward to pampering your pets!" xml:space="preserve">
+    <value>Kami tidak sabar untuk memanjakan haiwan peliharaan anda!</value>
+  </data>
+  <data name="Admin Verification Password" xml:space="preserve">
+    <value>Kata Laluan Pengesahan Pentadbir</value>
+  </data>
+  <data name="optional" xml:space="preserve">
+    <value>pilihan</value>
+  </data>
+  <data name="Enter admin key to register as admin" xml:space="preserve">
+    <value>Masukkan kunci pentadbir untuk mendaftar sebagai pentadbir</value>
+  </data>
+  <data name="Provide the fixed admin verification password to register an Admin account." xml:space="preserve">
+    <value>Sediakan kata laluan pengesahan pentadbir yang tetap untuk mendaftar akaun Pentadbir.</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>Rehat</value>
+  </data>
+  <data name="Capture Photo" xml:space="preserve">
+    <value>Tangkap Gambar</value>
+  </data>
+  <data name="View Profile" xml:space="preserve">
+    <value>Lihat Profil</value>
+  </data>
+  <data name="My Profile" xml:space="preserve">
+    <value>Profil Saya</value>
+  </data>
+  <data name="Edit Profile" xml:space="preserve">
+    <value>Edit Profil</value>
+  </data>
+  <data name="UpdateProfile_Description" xml:space="preserve">
+    <value>Sila kemaskini maklumat profil anda di bawah.
+Anda boleh menukar nama dan memuat naik gambar baharu.
+Alamat e-mel anda tidak boleh diubah di sini.</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Kemaskini</value>
+  </data>
+  <data name="Top Seller Services" xml:space="preserve">
+    <value>Perkhidmatan Terlaris</value>
+  </data>
+  <data name="Our most popular grooming services loved by pet owners across Malaysia" xml:space="preserve">
+    <value>Perkhidmatan dandanan paling popular kami yang digemari oleh pemilik haiwan peliharaan di seluruh Malaysia</value>
+  </data>
+  <data name="Why Choose" xml:space="preserve">
+    <value>Kenapa Pilih</value>
+  </data>
+  <data name="Certified Groomers" xml:space="preserve">
+    <value>Penggroom Bertauliah</value>
+  </data>
+  <data name="Our team consists of professionally trained and certified pet groomers with years of experience." xml:space="preserve">
+    <value>Pasukan kami terdiri daripada penggroom haiwan peliharaan yang terlatih secara profesional dan diperakui, dengan pengalaman bertahun-tahun.</value>
+  </data>
+  <data name="Stress-Free Environment" xml:space="preserve">
+    <value>Persekitaran Bebas Tekanan</value>
+  </data>
+  <data name="We create a calm and comfortable atmosphere to ensure your pet feels safe and relaxed during grooming." xml:space="preserve">
+    <value>Kami mewujudkan suasana yang tenang dan selesa untuk memastikan haiwan peliharaan anda berasa selamat dan rileks semasa sesi dandanan.</value>
+  </data>
+  <data name="Convenient Booking" xml:space="preserve">
+    <value>Tempahan yang Mudah</value>
+  </data>
+  <data name="Our online appointment system makes it easy to schedule, reschedule, or cancel grooming sessions anytime." xml:space="preserve">
+    <value>Sistem temu janji dalam talian kami memudahkan anda untuk menjadualkan, menjadual semula, atau membatalkan sesi dandanan pada bila-bila masa.</value>
+  </data>
+  <data name="What Our Customers Say" xml:space="preserve">
+    <value>Apa Kata Pelanggan Kami</value>
+  </data>
+  <data name="Check Our Location" xml:space="preserve">
+    <value>Semak Lokasi Kami</value>
+  </data>
+  <data name="Our Pet Grooming Services" xml:space="preserve">
+    <value>Perkhidmatan Dandanan Haiwan Peliharaan Kami</value>
+  </data>
+  <data name="Professional grooming services tailored to your pet's needs. We provide the best care for your furry friends." xml:space="preserve">
+    <value>Perkhidmatan dandanan profesional yang disesuaikan dengan keperluan haiwan peliharaan anda. Kami memberikan penjagaan terbaik untuk si manja anda.</value>
+  </data>
+  <data name="View Services" xml:space="preserve">
+    <value>Lihat Perkhidmatan</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Cari</value>
+  </data>
+  <data name="Choose Your Pet Type" xml:space="preserve">
+    <value>Pilih Jenis Haiwan Peliharaan Anda</value>
+  </data>
+  <data name="We offer specialized grooming services for dogs and cats. Select your pet type to see our tailored services." xml:space="preserve">
+    <value>Kami menawarkan perkhidmatan dandanan khas untuk anjing dan kucing. Pilih jenis haiwan peliharaan anda untuk melihat perkhidmatan yang disesuaikan.</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Semua</value>
+  </data>
+  <data name="Cat" xml:space="preserve">
+    <value>Kucing</value>
+  </data>
+  <data name="Dog" xml:space="preserve">
+    <value>Anjing</value>
+  </data>
+  <data name="Packages" xml:space="preserve">
+    <value>Pakej</value>
+  </data>
+  <data name="Grooming Services" xml:space="preserve">
+    <value>Perkhidmatan Dandanan</value>
+  </data>
+  <data name="Additional Services" xml:space="preserve">
+    <value>Perkhidmatan Tambahan</value>
+  </data>
+  <data name="Enhance your pet's grooming experience with these add-on services." xml:space="preserve">
+    <value>Tingkatkan pengalaman dandanan haiwan peliharaan anda dengan perkhidmatan tambahan ini.</value>
+  </data>
+  <data name="Teeth Brushing" xml:space="preserve">
+    <value>Memberus Gigi</value>
+  </data>
+  <data name="Keep your pet's teeth clean and breath fresh with our dental care service." xml:space="preserve">
+    <value>Pastikan gigi haiwan peliharaan anda bersih dan nafasnya segar dengan perkhidmatan penjagaan gigi kami.</value>
+  </data>
+  <data name="Pawdicure" xml:space="preserve">
+    <value>Rawatan Kuku</value>
+  </data>
+  <data name="Special treatment for your pet's paws including moisturizing and nail polish." xml:space="preserve">
+    <value>Rawatan khas untuk tapak kaki haiwan peliharaan anda termasuk pelembapan dan pengilat kuku.</value>
+  </data>
+  <data name="Flea Treatment" xml:space="preserve">
+    <value>Rawatan Kutu</value>
+  </data>
+  <data name="Effective flea treatment to keep your pet comfortable and your home pest-free." xml:space="preserve">
+    <value>Rawatan kutu yang berkesan untuk keselesaan haiwan peliharaan anda dan kebersihan rumah anda.</value>
+  </data>
+  <data name="Aromatherapy" xml:space="preserve">
+    <value>Aromaterapi</value>
+  </data>
+  <data name="Calming aromatherapy treatment to reduce stress and anxiety during grooming." xml:space="preserve">
+    <value>Rawatan aromaterapi yang menenangkan untuk keselesaan haiwan peliharaan semasa dandanan.</value>
+  </data>
+  <data name="Book This Service" xml:space="preserve">
+    <value>Tempah Perkhidmatan Ini</value>
+  </data>
+  <data name="Basic Bath" xml:space="preserve">
+    <value>Mandian Asas</value>
+  </data>
+  <data name="Perfect for regular maintenance. Includes bath with premium shampoo, blow dry, and basic grooming." xml:space="preserve">
+    <value>Sesuai untuk penjagaan rutin. Termasuk mandian dengan syampu premium, pengeringan, dan dandanan asas.</value>
+  </data>
+  <data name="Professional Nail Trimming" xml:space="preserve">
+    <value>Pemotongan Kuku Profesional</value>
+  </data>
+  <data name="Gentle Ear Cleaning" xml:space="preserve">
+    <value>Pembersihan Telinga yang Lembut</value>
+  </data>
+  <data name="Quick Brush Out" xml:space="preserve">
+    <value>Sikat Cepat</value>
+  </data>
+  <data name="Paw Pad Check" xml:space="preserve">
+    <value>Pemeriksaan Tapak Kaki</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>Dari</value>
+  </data>
+  <data name="Bath &amp; Brush" xml:space="preserve">
+    <value>Mandian &amp; Sikat</value>
+  </data>
+  <data name="Thorough bath and brushing service to keep your dog's coat healthy and tangle-free." xml:space="preserve">
+    <value>Perkhidmatan mandian dan sikatan menyeluruh untuk memastikan bulu anjing anda kekal sihat dan bebas kusut.</value>
+  </data>
+  <data name="All Basic Bath Services" xml:space="preserve">
+    <value>Semua Perkhidmatan Mandian Asas</value>
+  </data>
+  <data name="Thorough Brushing" xml:space="preserve">
+    <value>Sikatan Menyeluruh</value>
+  </data>
+  <data name="De-shedding Treatment" xml:space="preserve">
+    <value>Rawatan Penanggalan Bulu Gugur</value>
+  </data>
+  <data name="Mat Removal" xml:space="preserve">
+    <value>Rawatan Bulu Kusut</value>
+  </data>
+  <data name="Anal Gland Expression" xml:space="preserve">
+    <value>Rawatan Pengeluaran Kelenjar Anal</value>
+  </data>
+  <data name="Nail Trim &amp; Ear Cleaning" xml:space="preserve">
+    <value>Pemotongan Kuku &amp; Pembersihan Telinga</value>
+  </data>
+  <data name="Thorough Ear Cleaning" xml:space="preserve">
+    <value>Pembersihan Telinga Menyeluruh</value>
+  </data>
+  <data name="Paw Pad Trimming" xml:space="preserve">
+    <value>Pemotongan Tapak Kaki</value>
+  </data>
+  <data name="Quick Brush" xml:space="preserve">
+    <value>Sikat Ringkas</value>
+  </data>
+  <data name="Cat Bath &amp; Brush" xml:space="preserve">
+    <value>Mandian &amp; Sikat Kucing</value>
+  </data>
+  <data name="Gentle bathing and brushing service specially designed for cats with cat-friendly products." xml:space="preserve">
+    <value>Perkhidmatan mandian dan sikatan lembut yang direka khas untuk kucing, menggunakan produk mesra kucing.</value>
+  </data>
+  <data name="Cat-Specific Shampoo" xml:space="preserve">
+    <value>Syampu Kucing Khas</value>
+  </data>
+  <data name="Gentle Blow Dry" xml:space="preserve">
+    <value>Pengeringan Lembut</value>
+  </data>
+  <data name="Nail Trimming" xml:space="preserve">
+    <value>Pemotongan Kuku</value>
+  </data>
+  <data name="Ear Cleaning" xml:space="preserve">
+    <value>Pembersihan Telinga</value>
+  </data>
+  <data name="Cat Full Grooming" xml:space="preserve">
+    <value>Grooming Penuh untuk Kucing</value>
+  </data>
+  <data name="Complete grooming package for cats including bath, fur trimming, and all basic services." xml:space="preserve">
+    <value>Pakej grooming lengkap untuk kucing termasuk mandian, pemotongan bulu, dan semua perkhidmatan asas.</value>
+  </data>
+  <data name="Lion Cut (Optional)" xml:space="preserve">
+    <value>Potongan Gaya Singa (Pilihan)</value>
+  </data>
+  <data name="Sanitary Trim" xml:space="preserve">
+    <value>Pemotongan Kawasan Sensitif</value>
+  </data>
+  <data name="Breed-Specific Grooming" xml:space="preserve">
+    <value>Grooming Mengikut Jenis Baka</value>
+  </data>
+  <data name="Quick service for cats who need nail trimming and ear cleaning without a full bath." xml:space="preserve">
+    <value>Perkhidmatan pantas untuk kucing yang hanya memerlukan pemotongan kuku dan pembersihan telinga tanpa mandian penuh.</value>
+  </data>
+  <data name="Specialized grooming tailored to your dog's breed standards and coat requirements." xml:space="preserve">
+    <value>Grooming khusus yang disesuaikan mengikut piawaian baka dan keperluan bulu anjing anda.</value>
+  </data>
+  <data name="All Full Grooming Services" xml:space="preserve">
+    <value>Semua Perkhidmatan Grooming Lengkap</value>
+  </data>
+  <data name="Breed-Specific Cut" xml:space="preserve">
+    <value>Potongan Mengikut Jenis Baka</value>
+  </data>
+  <data name="Specialized Coat Treatment" xml:space="preserve">
+    <value>Rawatan Khusus untuk Bulu</value>
+  </data>
+  <data name="Show-Quality Styling" xml:space="preserve">
+    <value>Gaya Berkualiti Pertunjukan</value>
+  </data>
+  <data name="Breed-Specific Products" xml:space="preserve">
+    <value>Produk Khas Mengikut Jenis Baka</value>
+  </data>
+  <data name="Specialized treatment to reduce shedding by up to 90% for heavy shedding breeds." xml:space="preserve">
+    <value>Rawatan khusus untuk baka yang banyak gugur bulu, mampu mengurangkan keguguran bulu sehingga 90%.</value>
+  </data>
+  <data name="Special De-shedding Shampoo" xml:space="preserve">
+    <value>Syampu Khas Pengurangan Gugur Bulu</value>
+  </data>
+  <data name="Professional De-shedding Tools" xml:space="preserve">
+    <value>Alat Profesional Pengurangan Gugur Bulu</value>
+  </data>
+  <data name="High-Velocity Blow Dry" xml:space="preserve">
+    <value>Pengeringan Berkelajuan Tinggi</value>
+  </data>
+  <data name="Coat Conditioning Treatment" xml:space="preserve">
+    <value>Rawatan Perapi Bulu</value>
+  </data>
+  <data name="Flea &amp; Tick Treatment" xml:space="preserve">
+    <value>Rawatan Kutunya &amp; Tanda</value>
+  </data>
+  <data name="Specialized treatment to eliminate fleas and ticks and prevent reinfestation. " xml:space="preserve">
+    <value>Rawatan khas untuk menghapuskan kutu dan tanda serta mencegah jangkitan semula</value>
+  </data>
+  <data name="Pet Type" xml:space="preserve">
+    <value>Jenis Haiwan Peliharaan</value>
+  </data>
+  <data name="Cat &amp; Dog" xml:space="preserve">
+    <value>Kucing &amp; Anjing</value>
+  </data>
+  <data name="Flea &amp; Tick Shampoo" xml:space="preserve">
+    <value>Syampu Kutu &amp; Tanda</value>
+  </data>
+  <data name="Thorough Inspection" xml:space="preserve">
+    <value>Pemeriksaan Menyeluruh</value>
+  </data>
+  <data name="Extended Treatment Time" xml:space="preserve">
+    <value>Masa Rawatan Tambahan</value>
+  </data>
+  <data name="Preventative Spray Application" xml:space="preserve">
+    <value>Semburan Pencegahan</value>
+  </data>
+  <data name="Home Care Recommendations" xml:space="preserve">
+    <value>Cadangan Penjagaan di Rumah</value>
+  </data>
+  <data name="Haircut &amp; Styling Sanitary Trim" xml:space="preserve">
+    <value>Potongan &amp; Gaya dengan Trim Sanitari</value>
+  </data>
+  <data name="Full Grooming" xml:space="preserve">
+    <value>Grooming Penuh</value>
+  </data>
+  <data name="Complete grooming package including bath, haircut, styling, and all basic services for a fresh, clean look." xml:space="preserve">
+    <value>Pakej grooming lengkap termasuk mandi, potongan bulu, gaya dan semua perkhidmatan asas untuk penampilan segar dan bersih.</value>
+  </data>
+  <data name="Medicated Bath" xml:space="preserve">
+    <value>Mandian Berubat</value>
+  </data>
+  <data name="Special treatment for dogs with skin conditions, allergies, or other dermatological issues. " xml:space="preserve">
+    <value>Rawatan khas untuk anjing yang mengalami masalah kulit, alahan atau isu dermatologi lain</value>
+  </data>
+  <data name="Medicated Shampoo" xml:space="preserve">
+    <value>Syampu Berubat</value>
+  </data>
+  <data name="Skin Assessment" xml:space="preserve">
+    <value>Penilaian Keadaan Kulit</value>
+  </data>
+  <data name="Extended Soaking Time" xml:space="preserve">
+    <value>Masa Rendaman Tambahan</value>
+  </data>
+  <data name="Gentle Drying Process" xml:space="preserve">
+    <value>Proses Pengeringan Lembut</value>
+  </data>
+  <data name="Skin Moisturizing Treatment" xml:space="preserve">
+    <value>Rawatan Melembapkan Kulit</value>
+  </data>
+  <data name="Premium Spa Package" xml:space="preserve">
+    <value>Pakej Spa Premium</value>
+  </data>
+  <data name="Luxury treatment for your pet with premium products, special treatments, and extra pampering." xml:space="preserve">
+    <value>Rawatan mewah untuk haiwan peliharaan anda dengan produk premium, rawatan khas dan layanan istimewa.</value>
+  </data>
+  <data name="Luxury Shampoo &amp; Conditioner" xml:space="preserve">
+    <value>Syampu &amp; Perapi Mewah</value>
+  </data>
+  <data name="Paw Moisturizing Treatment" xml:space="preserve">
+    <value>Rawatan Melembapkan Tapak Kaki</value>
+  </data>
+  <data name="Facial Scrub" xml:space="preserve">
+    <value>Skrub Muka Haiwan Peliharaan</value>
+  </data>
+  <data name="Pet-Safe Cologne" xml:space="preserve">
+    <value>Kolon Selamat untuk Haiwan Peliharaan</value>
+  </data>
+  <data name="Decorative Bow or Bandana" xml:space="preserve">
+    <value>Reben Hiasan atau Bandana Haiwan Peliharaan</value>
+  </data>
+  <data name="My Appointments" xml:space="preserve">
+    <value>Temujanji Saya</value>
+  </data>
+  <data name="New Appointment" xml:space="preserve">
+    <value>Temujanji Baharu</value>
+  </data>
+  <data name="No appointments yet" xml:space="preserve">
+    <value>Tiada temujanji buat masa ini</value>
+  </data>
+  <data name="Book your first appointment to get started" xml:space="preserve">
+    <value>Tempah temujanji pertama anda untuk bermula</value>
+  </data>
+  <data name="Upcoming Appointments" xml:space="preserve">
+    <value>Temujanji Akan Datang</value>
+  </data>
+  <data name="No Service/Package Selected" xml:space="preserve">
+    <value>Tiada Perkhidmatan atau Pakej Dipilih</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Selesai</value>
+  </data>
+  <data name="PendingPayment" xml:space="preserve">
+    <value>Tertunda</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="Reschedule" xml:space="preserve">
+    <value>Jadual Semula</value>
+  </data>
+  <data name="Are you sure you want to cancel this appointment?" xml:space="preserve">
+    <value>Adakah anda pasti mahu membatalkan temujanji ini?</value>
+  </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>Akses Ditolak</value>
+  </data>
+  <data name="You are NOT AUTHORIZED to access the page" xml:space="preserve">
+    <value>Anda TIDAK DIBENARKAN untuk mengakses halaman ini</value>
+  </data>
+  <data name="Please enter your current password and the new password you wish to set." xml:space="preserve">
+    <value>Sila masukkan kata laluan semasa anda dan kata laluan baharu yang ingin ditetapkan.Pastikan anda mengesahkan kata laluan baharu sebelum menghantar.</value>
+  </data>
+  <data name="Current Password" xml:space="preserve">
+    <value>Kata Laluan Semasa</value>
+  </data>
+  <data name="New Password" xml:space="preserve">
+    <value>Kata Laluan Baharu</value>
+  </data>
+  <data name="Please enter your current password and the new password you wish to set. Make sure to confirm the new password before submitting." xml:space="preserve">
+    <value>Sila masukkan kata laluan semasa anda dan kata laluan baharu yang ingin ditetapkan.Pastikan anda mengesahkan kata laluan baharu sebelum menghantar.
+</value>
+  </data>
+  <data name="No payments found." xml:space="preserve">
+    <value>Tiada bayaran ditemui</value>
+  </data>
+  <data name="Payment Method" xml:space="preserve">
+    <value>Kaedah Pembayaran</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Tarikh</value>
+  </data>
+  <data name="Payment Type" xml:space="preserve">
+    <value>Jenis Pembayaran</value>
+  </data>
+  <data name="E-receipt" xml:space="preserve">
+    <value>Resit Elektronik</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Muat Turun</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>Deposit</value>
+  </data>
+  <data name="Full Payment" xml:space="preserve">
+    <value>Bayaran Penuh</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Telah Dibayar</value>
+  </data>
+  <data name="Add New Pet" xml:space="preserve">
+    <value>Tambah Haiwan Peliharaan Baharu</value>
+  </data>
+  <data name="Provide a brief summary of the pet’s personality, behavior, and any special traits. This helps staff or adopters understand the pet better." xml:space="preserve">
+    <value>Sila berikan ringkasan tentang personaliti, tingkah laku, dan ciri istimewa haiwan peliharaan. Ini membantu kakitangan atau bakal pengadopter memahaminya dengan lebih baik.</value>
+  </data>
+  <data name="Breed" xml:space="preserve">
+    <value>Baka</value>
+  </data>
+  <data name="Age" xml:space="preserve">
+    <value>Umur</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>Berat</value>
+  </data>
+  <data name="Medical Notes" xml:space="preserve">
+    <value>Nota Perubatan</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Cipta</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Lain-lain</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Butiran</value>
+  </data>
+  <data name="Back to Pets" xml:space="preserve">
+    <value>Kembali ke Haiwan Peliharaan</value>
+  </data>
+  <data name="My Pets" xml:space="preserve">
+    <value>Haiwan Peliharaan Saya</value>
+  </data>
+  <data name="You don’t have any pets yet. Start by adding one!" xml:space="preserve">
+    <value>Anda belum menambah haiwan peliharaan. Mulakan dengan menambah satu!</value>
+  </data>
+  <data name="Add Your First Pet" xml:space="preserve">
+    <value>Tambah Haiwan Peliharaan Pertama Anda</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Sunting</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Padam</value>
+  </data>
+  <data name="Edit Pet Information" xml:space="preserve">
+    <value>Sunting Maklumat Haiwan Peliharaan</value>
+  </data>
+  <data name="Save Changes" xml:space="preserve">
+    <value>Simpan Perubahan</value>
+  </data>
+  <data name="Are you sure you want to delete" xml:space="preserve">
+    <value>Adakah anda pasti mahu padam</value>
+  </data>
+  <data name="This cannot be undone!" xml:space="preserve">
+    <value>Tindakan ini tidak boleh dibatalkan!</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>Bayar</value>
+  </data>
+  <data name="Book Your Appointment" xml:space="preserve">
+    <value>Tempah Temu Janji Anda</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Pilih</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Masa</value>
+  </data>
+  <data name="Pet Info" xml:space="preserve">
+    <value>Maklumat Haiwan Peliharaan</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Sahkan</value>
+  </data>
+  <data name="Select Pet" xml:space="preserve">
+    <value>Pilih Haiwan Peliharaan</value>
+  </data>
+  <data name="Choose a pet" xml:space="preserve">
+    <value>Pilih seekor haiwan peliharaan</value>
+  </data>
+  <data name="No pet found. Please add a pet in your profile before booking." xml:space="preserve">
+    <value>Tiada haiwan peliharaan ditemui. Sila tambah haiwan peliharaan dalam profil anda sebelum membuat tempahan.</value>
+  </data>
+  <data name="Owner Information" xml:space="preserve">
+    <value>Maklumat Pemilik</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Seterusnya</value>
+  </data>
+  <data name="Please update your information in Update Profile." xml:space="preserve">
+    <value>Sila kemas kini maklumat anda dalam “Kemas Kini Profil”</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Sebelumnya</value>
+  </data>
+  <data name="Confirm Appointment" xml:space="preserve">
+    <value>Sahkan Temu Janji</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktif</value>
+  </data>
+  <data name="Deactivate" xml:space="preserve">
+    <value>Dinyahtaktifkan</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Tindakan</value>
+  </data>
+  <data name="Activate" xml:space="preserve">
+    <value>Aktifkan</value>
+  </data>
+  <data name="First" xml:space="preserve">
+    <value>Pertama</value>
+  </data>
+  <data name="Last" xml:space="preserve">
+    <value>Terakhir</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>Pengurusan Pengguna</value>
+  </data>
+  <data name="Admin Management" xml:space="preserve">
+    <value>Pengurusan Pentadbir</value>
+  </data>
+  <data name="Package Maintenance" xml:space="preserve">
+    <value>Penyelenggaraan Pakej</value>
+  </data>
+  <data name="Service Maintenance" xml:space="preserve">
+    <value>Penyelenggaraan Perkhidmatan</value>
+  </data>
+  <data name="Appointment Maintenance" xml:space="preserve">
+    <value>Penyelenggaraan Temu Janji</value>
+  </data>
+  <data name="record(s)" xml:space="preserve">
+    <value>rekod</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Halaman</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>Gambar</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Harga</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Tambahkan</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Penerangan</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>Ciri-ciri</value>
+  </data>
+  <data name="Existing Photos" xml:space="preserve">
+    <value>Foto Sedia Ada</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Buang</value>
+  </data>
+  <data name="Update Service" xml:space="preserve">
+    <value>Kemas Kini Perkhidmatan</value>
+  </data>
+  <data name="Please update service information below." xml:space="preserve">
+    <value>Sila kemas kini maklumat perkhidmatan di bawah.</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Peranti</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Sejarah Log Masuk</value>
+  </data>
+</root>

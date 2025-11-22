@@ -1,0 +1,557 @@
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<PawfectGrooming.Resources.Resources> Localizer
+@using System.Globalization;
+
+@{
+    ViewBag.Title = "Sale Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="admin-section">
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">@Localizer["Sales Management Dashboard"]</h1>
+        <div class="dashboard-controls">
+            <div class="date-selector">
+                <label>@Localizer["Select Period"]:</label>
+                <select id="periodSelect">
+                    <option value="6">@Localizer["Last 6 Months"]</option>
+                    <option value="12">@Localizer["Last 12 Months"]</option>
+                    <option value="3">@Localizer["Last 3 Months"]</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="reports-container">
+        <!-- KPI Cards Row -->
+        <div class="kpi-cards">
+            <div class="kpi-card sales-target">
+                <div class="kpi-header">
+                    <h3>@Localizer["Total Revenue (All Time - Completed)"]</h3>
+                    <div class="kpi-icon">💰</div>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-amount">
+                        @ViewBag.AllTimeCompletedRevenue.ToString("C", new CultureInfo("ms-MY"))
+                    </div>
+                    <div class="kpi-subtitle">@Localizer["All Time — Completed Bookings"]</div>
+                </div>
+            </div>
+
+            <div class="kpi-card service-revenue">
+                <div class="kpi-header">
+                    <h3>@Localizer["Service Revenue (All Time)"]</h3>
+                    <div class="kpi-icon">🔧</div>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-amount">
+                        @ViewBag.AllTimeServiceRevenue.ToString("C", new CultureInfo("ms-MY"))
+                    </div>
+                    <div class="kpi-subtitle">@Localizer["Completed Service Bookings:"] @ViewBag.AllTimeServiceCount</div>
+                </div>
+            </div>
+
+            <div class="kpi-card package-revenue">
+                <div class="kpi-header">
+                    <h3>@Localizer["Package Revenue (All Time)"]</h3>
+                    <div class="kpi-icon">📦</div>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-amount">
+                        @ViewBag.AllTimePackageRevenue.ToString("C", new CultureInfo("ms-MY"))
+                    </div>
+                    <div class="kpi-subtitle">@Localizer["Completed Package Bookings:"] @ViewBag.AllTimePackageCount</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <!-- Monthly Revenue Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>@Localizer["Monthly Revenue Trend"]</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="monthlyRevenueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Service vs Package Revenue Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>@Localizer["Revenue Distribution"]</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="revenueTypeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Status Distribution Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>@Localizer["Appointment Status"]</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="statusDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Services Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>@Localizer["Top Performing Services"]</h3>
+                </div>
+                <div class="chart-body">
+                    <canvas id="topServicesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Tables -->
+        <div class="data-tables">
+            <div class="table-container">
+                <h3>@Localizer["Top Services"]</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Service Name"]</th>
+                            <th>@Localizer["Revenue"]</th>
+                            <th>@Localizer["Bookings"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var service in ViewBag.TopServices)
+                        {
+                            <tr>
+                                <td>@service.ServiceName</td>
+                                <td>@service.Revenue.ToString("C", new CultureInfo("ms-MY"))</td>
+                                <td>@service.Count</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h3>@Localizer["Top Packages"]</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>@Localizer["Package Name"]</th>
+                            <th>@Localizer["Revenue"]</th>
+                            <th>@Localizer["Bookings"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var package in ViewBag.TopPackages)
+                        {
+                            <tr>
+                                <td>@package.PackageName</td>
+                                <td>@package.Revenue.ToString("C", new CultureInfo("ms-MY"))</td>
+                                <td>@package.Count</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a asp-action="AppointmentMaintenance" class="btn btn-primary">@Localizer["Back to Appointments"]</a>
+    </div>
+</section>
+
+@section foot {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Monthly Revenue Chart (now based on ALL-TIME grouped months)
+        const monthlyRevenueData = @Html.Raw(Json.Serialize(ViewBag.MonthlyRevenue));
+        const monthlyLabels = monthlyRevenueData.map(item => {
+            const date = new Date(item.year, item.month - 1);
+            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        });
+        const monthlyValues = monthlyRevenueData.map(item => item.revenue);
+
+        const monthlyCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
+        new Chart(monthlyCtx, {
+            type: 'bar',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'Monthly Revenue (All Time)',
+                    data: monthlyValues,
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return 'RM' + value.toLocaleString(); }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Service vs Package Revenue Chart (ALL-TIME)
+        const serviceRevenue = @ViewBag.AllTimeServiceRevenue;
+        const packageRevenue = @ViewBag.AllTimePackageRevenue;
+
+        const revenueTypeCtx = document.getElementById('revenueTypeChart').getContext('2d');
+        new Chart(revenueTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Services', 'Packages'],
+                datasets: [{
+                    data: [serviceRevenue, packageRevenue],
+                    backgroundColor: ['rgba(34, 197, 94, 0.8)', 'rgba(251, 146, 60, 0.8)'],
+                    borderColor: ['rgba(34, 197, 94, 1)', 'rgba(251, 146, 60, 1)'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total === 0 ? 0 : ((value / total) * 100).toFixed(1);
+                                return context.label + ': RM' + value.toLocaleString() + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+
+        // Status Distribution Chart (ALL-TIME)
+        const statusData = @Html.Raw(Json.Serialize(ViewBag.StatusDistribution));
+        const statusLabels = statusData.map(item => item.status || 'Unknown');
+        const statusValues = statusData.map(item => item.count);
+
+        const statusCtx = document.getElementById('statusDistributionChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'bar',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Appointments (All Time)',
+                    data: statusValues,
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(153, 102, 255, 0.8)',
+                        'rgba(255, 99, 132, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Top Services chart and other charts remain using ViewBag.TopServices / ViewBag.TopPackages (already set to ALL-TIME)
+        const topServicesData = @Html.Raw(Json.Serialize(ViewBag.TopServices));
+        const serviceLabels = topServicesData.map(item => item.serviceName);
+        const serviceValues = topServicesData.map(item => item.revenue);
+
+        const topServicesCtx = document.getElementById('topServicesChart').getContext('2d');
+        new Chart(topServicesCtx, {
+            type: 'bar',
+            data: {
+                labels: serviceLabels,
+                datasets: [{
+                    label: 'Revenue',
+                    data: serviceValues,
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    borderColor: 'rgba(34, 197, 94, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: function(value) { return 'RM' + value.toLocaleString(); } }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <style>
+        .reports-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem 0;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .dashboard-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .date-selector label {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .date-selector select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.875rem;
+        }
+
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-left: 4px solid;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-card.sales-target {
+            border-left-color: #3b82f6;
+        }
+
+        .kpi-card.service-revenue {
+            border-left-color: #10b981;
+        }
+
+        .kpi-card.package-revenue {
+            border-left-color: #f59e0b;
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .kpi-icon {
+            font-size: 1.5rem;
+        }
+
+        .kpi-content {
+            text-align: left;
+        }
+
+        .kpi-amount {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+
+        .kpi-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .kpi-note {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #4b5563;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-header {
+            padding: 1.5rem 1.5rem 0 1.5rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .chart-header h3 {
+            margin: 0 0 1rem 0;
+            color: #1f2937;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .chart-body {
+            padding: 1.5rem;
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-body canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .data-tables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container h3 {
+            margin-bottom: 1rem;
+            color: #1f2937;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+        }
+
+    </style>
+}
